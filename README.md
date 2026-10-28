@@ -7,16 +7,18 @@
 | 0 | alpha | Claude | `claude-opus-5-5` | — (primary; delegates to beta) |
 | 1 | beta | Claude | `claude-sonnet-5-5` | high |
 | 2 | beta | Codex | `gpt-6.1-sol` | high |
-| 3 | beta | Grok | `grok-4.7` | high |
-| 4 | beta | Muse Code | `muse-wonder-1.0` | high |
-| 5 | beta | OpenCode Go | `opencode-go/deepseek-v4.1-flash` | high |
-| 6 | beta | OpenCode Go | `opencode-go/minimax-m3.1-flash` | high |
-| 7 | beta | OpenCode Go | `opencode-go/glm-5.3-flash` | high |
-| 8 | beta | OpenCode Go | `opencode-go/kimi-k3.1-pro` | high |
+| 3 | beta | Codex | `gpt-6.1-terra` | high |
+| 4 | beta | Grok | `grok-4.7` | high |
+| 5 | beta | Muse Code | `muse-wonder-1.0` | high |
+| 6 | beta | OpenCode Go | `opencode-go/deepseek-v4.1-flash` | high |
+| 7 | beta | OpenCode Go | `opencode-go/minimax-m3.1-flash` | high |
+| 8 | beta | OpenCode Go | `opencode-go/glm-5.3-flash` | high |
+| 9 | beta | OpenCode Go | `opencode-go/kimi-k3.1-pro` | high |
 
-Every beta model runs at **high** reasoning, set explicitly. The OpenCode models use the paid
-`opencode-go` tier, not the free models. Kimi K3.1 Pro replaces Mimo (`mimo-v2.6`), which is no
-longer on the team.
+Every beta model runs at **high** reasoning, set explicitly (GPT-6.1 Terra defaults to low). The
+OpenCode models use the paid `opencode-go` tier, not the free models. Kimi K3.1 Pro replaces Mimo
+(`mimo-v2.6`), which is no longer on the team. GPT-6.1 Terra, a new OpenAI model, joins as a ninth
+reviewer, through Codex like GPT-6.1 Sol.
 
 ## How the team works
 
