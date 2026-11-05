@@ -21,7 +21,7 @@ OpenCode models use the paid `opencode-go` tier, not the free models. Kimi K3.1 
 (`mimo-v2.6`), which is no longer on the team. GPT-6.1 Terra, a new OpenAI model, joins as a ninth
 reviewer, through Codex like GPT-6.1 Sol. Hy4 (`opencode-go/hy4`, not `hy4-preview`) joins as a tenth
 reviewer, through OpenCode Go. Muse Spark 1.3 (`muse-spark-1.3-contributor`) replaces Muse Wonder
-(`muse-wonder-1.0`), which Muse Code no longer offers.
+(`muse-wonder-1.0`), which Muse Code here does not offer.
 
 ## How the team works
 
