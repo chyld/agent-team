@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/hero.png" alt="Agent team: alpha (claude-opus-5-5) builds, and ten beta reviewers from five providers review every spec and change" width="100%">
+</p>
+
 # Agent team
 
 **alpha** is the primary agent; it writes and builds, and delegates review work to **beta**.

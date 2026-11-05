@@ -1,0 +1,155 @@
+<!doctype html>
+<!--
+  Source for hero.png. Render with:
+    google-chrome-stable --headless=new --hide-scrollbars --force-device-scale-factor=2 \
+      --window-size=1600,640 --virtual-time-budget=3000 --screenshot=hero@2x.png hero.html
+    magick hero@2x.png -filter Lanczos -resize 1600x640 -strip hero.png
+  Keep TEAM below in step with the table in README.md.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: #07090f;
+    --ink: #eef2f8;
+    --muted: #8a94a8;
+    --dim: #4b5468;
+    --alpha: #f4a46a;
+    --sans: "Adwaita Sans", "Inter", "Noto Sans", sans-serif;
+    --mono: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 640px; overflow: hidden; background: var(--bg); }
+  body { font-family: var(--sans); color: var(--ink); position: relative; -webkit-font-smoothing: antialiased; }
+
+  .bg { position: absolute; inset: 0;
+    background:
+      radial-gradient(520px 420px at 47% 50%, rgba(244,164,106,0.14), transparent 70%),
+      radial-gradient(700px 520px at 82% 50%, rgba(129,140,248,0.10), transparent 70%),
+      radial-gradient(600px 400px at 0% 100%, rgba(56,189,248,0.07), transparent 70%); }
+  .grid { position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1.2px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(900px 520px at 65% 50%, #000 25%, transparent 85%); }
+
+  .copy { position: absolute; left: 80px; top: 0; bottom: 0; width: 560px;
+    display: flex; flex-direction: column; justify-content: center; }
+  .chip { align-self: flex-start; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.24em;
+    color: #f8c9a6; padding: 7px 14px 7px 12px; border-radius: 999px;
+    border: 1px solid rgba(244,164,106,0.32); background: rgba(244,164,106,0.07);
+    display: inline-flex; gap: 9px; align-items: center; }
+  .chip i { width: 7px; height: 7px; border-radius: 50%; background: var(--alpha); box-shadow: 0 0 10px var(--alpha); }
+  h1 { margin-top: 24px; font-size: 84px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; }
+  h1 span { background: linear-gradient(90deg, #f8b886, #c4a1ff 55%, #7dd3fc);
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { margin-top: 20px; font-size: 21px; line-height: 1.45; color: var(--muted); max-width: 500px; }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  .steps { margin-top: 34px; display: flex; align-items: stretch; gap: 0; }
+  .step { position: relative; padding: 11px 14px 12px; min-width: 116px;
+    border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.025); }
+  .step:first-child { border-radius: 12px 0 0 12px; }
+  .step:last-child { border-radius: 0 12px 12px 0; }
+  .step + .step { border-left: none; }
+  .step .who { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; }
+  .step .who.a { color: var(--alpha); }
+  .step .who.b { color: #a5b4fc; }
+  .step .what { margin-top: 4px; font-size: 16px; font-weight: 650; }
+  .step .n { position: absolute; right: 11px; top: 10px; font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  #net { position: absolute; inset: 0; }
+  .node { position: absolute; display: flex; align-items: center; gap: 11px;
+    height: 40px; padding: 0 16px 0 12px; border-radius: 12px;
+    background: linear-gradient(180deg, rgba(22,26,38,0.96), rgba(14,17,26,0.96));
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow: 0 10px 30px -12px rgba(0,0,0,0.8); white-space: nowrap; }
+  .node .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .node .prov { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; width: 104px; flex: none; }
+  .node .model { font-family: var(--mono); font-size: 14px; color: var(--ink); }
+
+  .alpha { position: absolute; width: 168px; height: 168px; border-radius: 50%;
+    display: grid; place-items: center; text-align: center;
+    background: radial-gradient(circle at 50% 35%, #2a1d16, #120d0b 70%);
+    border: 1.5px solid rgba(244,164,106,0.75);
+    box-shadow: 0 0 0 10px rgba(244,164,106,0.06), 0 0 0 22px rgba(244,164,106,0.03),
+                0 0 70px rgba(244,164,106,0.35); }
+  .alpha .t { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
+  .alpha .s { margin-top: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: #f8c9a6; }
+  .alpha .r { margin-top: 2px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--muted); }
+  .label { position: absolute; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.24em; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+<svg id="net" width="1600" height="640"></svg>
+
+<section class="copy">
+  <div class="chip"><i></i>MULTI-AGENT WORKFLOW</div>
+  <h1>Agent <span>team</span></h1>
+  <p class="lede"><b>One agent builds. Ten review.</b> Every spec and every change is checked by models from five different providers.</p>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div class="who a">ALPHA</div><div class="what">Spec</div></div>
+    <div class="step"><div class="n">2</div><div class="who b">BETA</div><div class="what">Review</div></div>
+    <div class="step"><div class="n">3</div><div class="who a">ALPHA</div><div class="what">Build</div></div>
+    <div class="step"><div class="n">4</div><div class="who b">BETA</div><div class="what">Review</div></div>
+  </div>
+</section>
+
+<div class="alpha" id="alpha"><div><div class="t">alpha</div><div class="s">claude-opus-5-5</div><div class="r">BUILDS</div></div></div>
+<div class="label" id="betaLabel">BETA · REVIEWS · HIGH REASONING</div>
+
+<script>
+const COLORS = { Claude: "#f4a46a", Codex: "#6ee7b7", Grok: "#e5e7eb", "Muse Code": "#7dd3fc", "OpenCode Go": "#c4a1ff" }
+const TEAM = [
+  ["Claude", "claude-sonnet-5-5"],
+  ["Codex", "gpt-6.1-sol"],
+  ["Codex", "gpt-6.1-terra"],
+  ["Grok", "grok-4.7"],
+  ["Muse Code", "muse-spark-1.3-contributor"],
+  ["OpenCode Go", "deepseek-v4.1-flash"],
+  ["OpenCode Go", "minimax-m3.1-flash"],
+  ["OpenCode Go", "glm-5.3-flash"],
+  ["OpenCode Go", "kimi-k3.1-pro"],
+  ["OpenCode Go", "hy4"],
+]
+
+const AX = 778, AY = 320, AR = 84           // alpha centre and radius
+const alpha = document.getElementById("alpha")
+alpha.style.left = (AX - AR) + "px"; alpha.style.top = (AY - AR) + "px"
+
+const firstY = 72, step = 50, R = 380
+const svg = document.getElementById("net")
+let defs = "<defs>", paths = "", dots = ""
+TEAM.forEach(([prov, model], i) => {
+  const y = firstY + i * step + 20
+  const t = (y - AY) / (step * 4.5 + 20)    // -1 .. 1
+  const x = AX + R - 70 * t * t             // a gentle arc, nearest in the middle
+  const el = document.createElement("div")
+  el.className = "node"
+  el.style.left = x + "px"; el.style.top = (y - 20) + "px"
+  el.innerHTML = `<span class="dot" style="background:${COLORS[prov]};box-shadow:0 0 10px ${COLORS[prov]}"></span><span class="prov">${prov}</span><span class="model">${model}</span>`
+  document.body.appendChild(el)
+
+  const ang = Math.atan2(y - AY, x - AX)
+  const sx = AX + (AR + 4) * Math.cos(ang), sy = AY + (AR + 4) * Math.sin(ang)
+  const ex = x - 2, ey = y
+  const c1x = sx + (ex - sx) * 0.45, c2x = sx + (ex - sx) * 0.55
+  defs += `<linearGradient id="l${i}" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}">
+    <stop offset="0" stop-color="#f4a46a" stop-opacity="0.55"/><stop offset="1" stop-color="${COLORS[prov]}" stop-opacity="0.75"/></linearGradient>`
+  const d = `M${sx} ${sy} C${c1x} ${sy} ${c2x} ${ey} ${ex} ${ey}`
+  paths += `<path d="${d}" fill="none" stroke="url(#l${i})" stroke-width="1.4"/>`
+  // a travelling "packet" on each line, at varied positions
+  const f = [0.62, 0.35, 0.78, 0.5, 0.25, 0.7, 0.42, 0.85, 0.3, 0.58][i]
+  const mt = 1 - f
+  const px = mt*mt*mt*sx + 3*mt*mt*f*c1x + 3*mt*f*f*c2x + f*f*f*ex
+  const py = mt*mt*mt*sy + 3*mt*mt*f*sy + 3*mt*f*f*ey + f*f*f*ey
+  dots += `<circle cx="${px}" cy="${py}" r="2.6" fill="${COLORS[prov]}" style="filter:drop-shadow(0 0 5px ${COLORS[prov]})"/>`
+})
+svg.innerHTML = defs + "</defs>" + paths + dots
+
+const lab = document.getElementById("betaLabel")
+lab.style.left = (AX + R - 70 + 12) + "px"; lab.style.top = (firstY - 34) + "px"
+</script>
+</body>
+</html>
