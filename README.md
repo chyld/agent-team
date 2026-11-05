@@ -14,11 +14,13 @@
 | 7 | beta | OpenCode Go | `opencode-go/minimax-m3.1-flash` | high |
 | 8 | beta | OpenCode Go | `opencode-go/glm-5.3-flash` | high |
 | 9 | beta | OpenCode Go | `opencode-go/kimi-k3.1-pro` | high |
+| 10 | beta | OpenCode Go | `opencode-go/hy4` | high |
 
 Every beta model runs at **high** reasoning, set explicitly (GPT-6.1 Terra defaults to low). The
 OpenCode models use the paid `opencode-go` tier, not the free models. Kimi K3.1 Pro replaces Mimo
 (`mimo-v2.6`), which is no longer on the team. GPT-6.1 Terra, a new OpenAI model, joins as a ninth
-reviewer, through Codex like GPT-6.1 Sol.
+reviewer, through Codex like GPT-6.1 Sol. Hy4 (`opencode-go/hy4`, not `hy4-preview`) joins as a tenth
+reviewer, through OpenCode Go.
 
 ## How the team works
 
