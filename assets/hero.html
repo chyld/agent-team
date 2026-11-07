@@ -87,7 +87,7 @@
 <section class="copy">
   <div class="chip"><i></i>MULTI-AGENT WORKFLOW</div>
   <h1>Agent <span>team</span></h1>
-  <p class="lede"><b>One agent builds. Ten review.</b> Every spec and every change is checked by models from five different providers.</p>
+  <p class="lede"><b>One agent builds. Eleven review.</b> Every spec and every change is checked by models from six different providers.</p>
   <div class="steps">
     <div class="step"><div class="n">1</div><div class="who a">ALPHA</div><div class="what">Spec</div></div>
     <div class="step"><div class="n">2</div><div class="who b">BETA</div><div class="what">Review</div></div>
@@ -100,7 +100,7 @@
 <div class="label" id="betaLabel">BETA · REVIEWS · HIGH REASONING</div>
 
 <script>
-const COLORS = { Claude: "#f4a46a", Codex: "#6ee7b7", Grok: "#e5e7eb", "Muse Code": "#7dd3fc", "OpenCode Go": "#c4a1ff" }
+const COLORS = { Claude: "#f4a46a", Codex: "#6ee7b7", Grok: "#e5e7eb", "Muse Code": "#7dd3fc", "OpenCode Go": "#c4a1ff", Antigravity: "#f472b6" }
 const TEAM = [
   ["Claude", "claude-sonnet-5-5"],
   ["Codex", "gpt-6.1-sol"],
@@ -112,18 +112,20 @@ const TEAM = [
   ["OpenCode Go", "glm-5.3-flash"],
   ["OpenCode Go", "kimi-k3.1-pro"],
   ["OpenCode Go", "hy4"],
+  ["Antigravity", "gemini-4-argon"],
 ]
 
 const AX = 778, AY = 320, AR = 84           // alpha centre and radius
 const alpha = document.getElementById("alpha")
 alpha.style.left = (AX - AR) + "px"; alpha.style.top = (AY - AR) + "px"
 
-const firstY = 72, step = 50, R = 380
+const step = 46, R = 380, mid = (TEAM.length - 1) / 2
+const firstY = AY - 20 - step * mid         // centre the column on alpha
 const svg = document.getElementById("net")
 let defs = "<defs>", paths = "", dots = ""
 TEAM.forEach(([prov, model], i) => {
   const y = firstY + i * step + 20
-  const t = (y - AY) / (step * 4.5 + 20)    // -1 .. 1
+  const t = (y - AY) / (step * mid + 20)    // -1 .. 1
   const x = AX + R - 70 * t * t             // a gentle arc, nearest in the middle
   const el = document.createElement("div")
   el.className = "node"
@@ -140,7 +142,7 @@ TEAM.forEach(([prov, model], i) => {
   const d = `M${sx} ${sy} C${c1x} ${sy} ${c2x} ${ey} ${ex} ${ey}`
   paths += `<path d="${d}" fill="none" stroke="url(#l${i})" stroke-width="1.4"/>`
   // a travelling "packet" on each line, at varied positions
-  const f = [0.62, 0.35, 0.78, 0.5, 0.25, 0.7, 0.42, 0.85, 0.3, 0.58][i]
+  const f = [0.62, 0.35, 0.78, 0.5, 0.25, 0.7, 0.42, 0.85, 0.3, 0.58, 0.66][i]
   const mt = 1 - f
   const px = mt*mt*mt*sx + 3*mt*mt*f*c1x + 3*mt*f*f*c2x + f*f*f*ex
   const py = mt*mt*mt*sy + 3*mt*mt*f*sy + 3*mt*f*f*ey + f*f*f*ey

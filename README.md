@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.png" alt="Agent team: alpha (claude-opus-5-5) builds, and ten beta reviewers from five providers review every spec and change" width="100%">
+  <img src="assets/hero.png" alt="Agent team: alpha (claude-opus-5-5) builds, and eleven beta reviewers from six providers review every spec and change" width="100%">
 </p>
 
 # Agent team
@@ -19,13 +19,16 @@
 | 8 | beta | OpenCode Go | `opencode-go/glm-5.3-flash` | high |
 | 9 | beta | OpenCode Go | `opencode-go/kimi-k3.1-pro` | high |
 | 10 | beta | OpenCode Go | `opencode-go/hy4` | high |
+| 11 | beta | Antigravity | `gemini-4-argon` | high |
 
 Every beta model runs at **high** reasoning, set explicitly (GPT-6.1 Terra defaults to low). The
 OpenCode models use the paid `opencode-go` tier, not the free models. Kimi K3.1 Pro replaces Mimo
 (`mimo-v2.6`), which is no longer on the team. GPT-6.1 Terra, a new OpenAI model, joins as a ninth
 reviewer, through Codex like GPT-6.1 Sol. Hy4 (`opencode-go/hy4`, not `hy4-preview`) joins as a tenth
 reviewer, through OpenCode Go. Muse Spark 1.3 (`muse-spark-1.3-contributor`) replaces Muse Wonder
-(`muse-wonder-1.0`), which Muse Code here does not offer.
+(`muse-wonder-1.0`), which Muse Code here does not offer. Gemini 4 Argon (`gemini-4-argon`, thought
+level high) joins as an eleventh reviewer, through Antigravity, which runs on the `agy` CLI's ACP
+server (`agy acp`).
 
 ## How the team works
 
