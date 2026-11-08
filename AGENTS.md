@@ -69,8 +69,8 @@ Every brief says:
     anywhere, so read each one before allowing it.
   - **`--standalone`** gives each reviewer its own private server instead of the shared background
     service.
-- **Claude:** `claude --model <model> --effort high "<task>"`. Every other way to start it, and every
-  option, is in [agents/claude.md](agents/claude.md).
+- **Claude:** `claude --model <model> --effort high "<task>"`. The basics are in
+  [agents/claude.md](agents/claude.md).
 - **Muse Code:** `muse --model muse-spark-1.3-contributor --reasoning-effort high "<task>"`
   - Muse's sandbox blocks `hc send` with a read-only-filesystem error and offers no approval for it,
     even with `--approval-judge off`. So its brief says: don't run `hc send`; just write the output
@@ -109,7 +109,7 @@ Every brief says:
   - Never pick "Always allow".
 - **Claude asks only if its permission mode says so.** With the user's auto mode, it asked for
   nothing in the project folder. In a folder it hasn't seen, or under `--permission-mode manual`, it
-  does ask. See [What Claude may ask](agents/claude.md#what-claude-may-ask).
+  does ask. See [Watch out](agents/claude.md#watch-out).
 - **Anything else:** if a blocked agent wants something outside its brief (another file, network,
   installs, destructive commands), read the screen and ask the user. Never `--force` past a
   permission. Antigravity's `accept-edits` and Codex's `workspace-write` don't limit writes to the
