@@ -39,3 +39,6 @@ server (`agy acp`).
 
 Reviewers run on the same machine, so each one uses its own port and never kills a process it
 didn't start. Never `pkill` by name: that once killed other reviewers' servers.
+
+[AGENTS.md](AGENTS.md) covers how alpha launches, watches and cleans up beta in Herdr: each CLI's
+launch command, the prompts to expect, and the brief every reviewer gets.
