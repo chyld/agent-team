@@ -1,7 +1,5 @@
 # Agent team
 
-**alpha** is the primary agent; it writes and builds, and delegates review work to **beta**.
-
 | # | Team | Harness | Model | Reasoning |
 |---|---|---|---|---|
 | 0 | alpha | `claude` | `claude-fable-5-2` | high |
