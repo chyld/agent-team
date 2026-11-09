@@ -27,21 +27,39 @@
 | 22 | epsilon | `opencode` | `opencode/nemotron-3.5-lightning-free` | default |
 | 23 | epsilon | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
 
-Each subagent is one shell command: harness, model, reasoning level, prompt. The command prints the
-answer to stdout and exits.
+**Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
+for everything below.
+
+Each subagent is one `hc run` command: a name, a harness, a model, a reasoning level and a prompt. It
+starts the harness interactively in its own herdr-core terminal, as a child of yours, so it stays
+watchable and steerable. Never use a one-shot mode (`claude -p`, `grok -p`, `agy -p`, `codex exec`,
+`muse exec`, `opencode run`). [AGENTS.md](AGENTS.md) has the tested details: briefs, permission
+prompts, watching and cleanup.
 
 ## How to call each harness
 
-Replace `MODEL` with a model from the roster and `PROMPT` with the task.
+Every call has the same wrapper:
 
-| Harness | Command |
+```sh
+hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
+```
+
+Replace `NAME` with a unique terminal name (1-32 characters from `a-z 0-9 - _`, so no model ids),
+`DIR` with the folder the subagent should work in, `MODEL` with a model from the roster and `PROMPT`
+with the task.
+
+| Harness | `HARNESS_COMMAND` |
 |---|---|
-| `claude` | `claude -p "PROMPT" --model MODEL --effort high` |
-| `codex` | `codex exec -m MODEL -c model_reasoning_effort='"high"' --skip-git-repo-check "PROMPT"` |
-| `grok` | `grok -p "PROMPT" -m MODEL --effort high` |
-| `muse` | `muse exec --model MODEL --effort high "PROMPT"` |
-| `opencode` | `opencode run -m "MODEL#high" "PROMPT"` |
-| `agy` | `agy -p "PROMPT" --model MODEL --effort high` |
+| `claude` | `claude --model MODEL --effort high "PROMPT"` |
+| `codex` | `codex --no-daemon -m MODEL -c model_reasoning_effort='"high"' "PROMPT"` |
+| `grok` | `grok -m MODEL --effort high "PROMPT"` |
+| `muse` | `muse --model MODEL --effort high "PROMPT"` |
+| `opencode` | `env 'OPENCODE_CONFIG_CONTENT={"model":"MODEL#high"}' opencode --standalone --prompt "PROMPT"` |
+| `agy` | `agy --model MODEL --effort high -i "PROMPT"` |
+
+- `codex` needs `--no-daemon`, or its commands run outside hc.
+- `opencode`'s interactive mode has no `-m` flag, so the model goes in `OPENCODE_CONFIG_CONTENT`.
+- `agy` needs `-i` to take a first prompt and stay interactive.
 
 ## Where the reasoning level goes
 
@@ -50,19 +68,44 @@ Replace `MODEL` with a model from the roster and `PROMPT` with the task.
 - `opencode`: a suffix on the model, `provider/model#high`.
 - Reasoning `default` in the roster means the model has no `high` setting: call it with the bare model id, no `#high`.
 
+## The prompt
+
+- Put the task in the launch command. A message sent while the harness boots can be dropped.
+- End it with how to report: `Report with hc send $HC_TERMINAL_ID when done or stuck.` Inside double
+  quotes your shell fills in your own terminal id at launch, which is what the subagent needs.
+- `muse`'s sandbox blocks `hc send`. Tell it to write its output file and end its turn instead.
+- Say what is off limits, e.g. `Read-only; no subagents.`
+
 ## Examples
 
 ```sh
-claude -p "Review src/auth.py for bugs" --model claude-sonnet-5-5 --effort high
-codex exec -m gpt-6.1-sol -c model_reasoning_effort='"high"' --skip-git-repo-check "Review src/auth.py for bugs"
-grok -p "Review src/auth.py for bugs" -m grok-4.7 --effort high
-muse exec --model muse-ember-1.0 --effort high "Review src/auth.py for bugs"
-opencode run -m "opencode-go/kimi-k3.1-pro#high" "Review src/auth.py for bugs"
-agy -p "Review src/auth.py for bugs" --model gemini-4-argon --effort high
+hc run --bg --name sonnet --cwd ~/app -- claude --model claude-sonnet-5-5 --effort high "Review src/auth.py for bugs. Read-only; no subagents. Report with hc send $HC_TERMINAL_ID when done or stuck."
+hc run --bg --name sol --cwd ~/app -- codex --no-daemon -m gpt-6.1-sol -c model_reasoning_effort='"high"' "Review src/auth.py for bugs. Read-only; no subagents. Report with hc send $HC_TERMINAL_ID when done or stuck."
+hc run --bg --name grok --cwd ~/app -- grok -m grok-4.7 --effort high "Review src/auth.py for bugs. Read-only; no subagents. Report with hc send $HC_TERMINAL_ID when done or stuck."
+hc run --bg --name muse --cwd ~/app -- muse --model muse-ember-1.0 --effort high "Review src/auth.py for bugs. Read-only; no subagents. Write findings to /tmp/muse-review.md and end your turn."
+hc run --bg --name kimi --cwd ~/app -- env 'OPENCODE_CONFIG_CONTENT={"model":"opencode-go/kimi-k3.1-pro#high"}' opencode --standalone --prompt "Review src/auth.py for bugs. Read-only; no subagents. Report with hc send $HC_TERMINAL_ID when done or stuck."
+hc run --bg --name argon --cwd ~/app -- agy --model gemini-4-argon --effort high -i "Review src/auth.py for bugs. Read-only; no subagents. Report with hc send $HC_TERMINAL_ID when done or stuck."
 ```
+
+## Collecting results
+
+```sh
+hc wait --children any      # the next child's news: done, blocked, a message, an exit
+hc read sonnet --lines 100  # its screen and history
+hc send sonnet "Recheck the fix"
+hc kill sonnet; hc rm sonnet
+```
+
+- A report arrives as your next input, tagged `<hc from="t7 sonnet">...</hc>`.
+- Never sleep or poll. Wait with `hc wait`.
+- `blocked` means the subagent is asking for a permission: read its screen with
+  `hc read NAME --lines 0` and decide. Never `--force` past it.
+- When you have the results, kill and remove every terminal you started, and only those.
 
 ## Notes
 
-- Run the command from the directory the subagent should work in.
-- To run several subagents at once, start each command in the background and collect their output.
-- These commands use each harness's default permissions, so a subagent may be unable to edit files or run commands. Grant more only when the task needs it.
+- To run several subagents at once, start each one with its own `--name`; `--bg` returns at once.
+- These commands use each harness's default permissions. Most harnesses then ask before edits and
+  shell commands, which shows up as `blocked`. Grant more only when the task needs it.
+- `opencode` is the exception: with no permission block it asks for nothing. Add one to
+  `OPENCODE_CONFIG_CONTENT` as shown in [AGENTS.md](AGENTS.md#per-cli-launch-commands-all-at-high-reasoning).
