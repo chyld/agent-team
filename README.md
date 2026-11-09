@@ -11,26 +11,27 @@
 | 0 | alpha | `claude` | `claude-fable-5-2` | high |
 | 1 | beta | `claude` | `claude-opus-5-5` | high |
 | 2 | gamma | `claude` | `claude-sonnet-5-5` | high |
-| 3 | gamma | `codex` | `gpt-6.1-sol` | high |
-| 4 | gamma | `codex` | `gpt-6.1-terra` | high |
-| 5 | gamma | `grok` | `grok-4.7` | high |
-| 6 | gamma | `muse` | `muse-ember-1.0` | high |
-| 7 | gamma | `agy` | `gemini-4-argon` | high |
-| 8 | delta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
-| 9 | delta | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 10 | delta | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 11 | delta | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
-| 12 | delta | `opencode` | `opencode-go/hy4` | high |
-| 13 | epsilon | `opencode` | `opencode/beam-free` | high |
-| 14 | epsilon | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
-| 15 | epsilon | `opencode` | `opencode/flint-40b-free` | high |
-| 16 | epsilon | `opencode` | `opencode/glm-5.3-flash-free` | high |
-| 17 | epsilon | `opencode` | `opencode/iceman-free` | default |
-| 18 | epsilon | `opencode` | `opencode/inkling-2-small-free` | high |
-| 19 | epsilon | `opencode` | `opencode/longcat-2.5-free` | default |
-| 20 | epsilon | `opencode` | `opencode/mimo-v2.6-flash-free` | default |
-| 21 | epsilon | `opencode` | `opencode/nemotron-3.5-lightning-free` | default |
-| 22 | epsilon | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+| 3 | gamma | `claude` | `claude-haiku-5-5` | high |
+| 4 | gamma | `codex` | `gpt-6.1-sol` | high |
+| 5 | gamma | `codex` | `gpt-6.1-terra` | high |
+| 6 | gamma | `grok` | `grok-4.7` | high |
+| 7 | gamma | `muse` | `muse-ember-1.0` | high |
+| 8 | gamma | `agy` | `gemini-4-argon` | high |
+| 9 | delta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
+| 10 | delta | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 11 | delta | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 12 | delta | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
+| 13 | delta | `opencode` | `opencode-go/hy4` | high |
+| 14 | epsilon | `opencode` | `opencode/beam-free` | high |
+| 15 | epsilon | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
+| 16 | epsilon | `opencode` | `opencode/flint-40b-free` | high |
+| 17 | epsilon | `opencode` | `opencode/glm-5.3-flash-free` | high |
+| 18 | epsilon | `opencode` | `opencode/iceman-free` | default |
+| 19 | epsilon | `opencode` | `opencode/inkling-2-small-free` | high |
+| 20 | epsilon | `opencode` | `opencode/longcat-2.5-free` | default |
+| 21 | epsilon | `opencode` | `opencode/mimo-v2.6-flash-free` | default |
+| 22 | epsilon | `opencode` | `opencode/nemotron-3.5-lightning-free` | default |
+| 23 | epsilon | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
 
 Each subagent is one shell command: harness, model, reasoning level, prompt. The command prints the
 answer to stdout and exits.
