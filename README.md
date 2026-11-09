@@ -33,8 +33,7 @@ for everything below.
 Each subagent is one `hc run` command: a name, a harness, a model, a reasoning level and a prompt. It
 starts the harness interactively in its own herdr-core terminal, as a child of yours, so it stays
 watchable and steerable. Never use a one-shot mode (`claude -p`, `grok -p`, `agy -p`, `codex exec`,
-`muse exec`, `opencode run`). [AGENTS.md](AGENTS.md) has the tested details: briefs, permission
-prompts, watching and cleanup.
+`muse exec`, `opencode run`).
 
 ## How to call each harness
 
@@ -108,4 +107,9 @@ hc kill sonnet; hc rm sonnet
 - These commands use each harness's default permissions. Most harnesses then ask before edits and
   shell commands, which shows up as `blocked`. Grant more only when the task needs it.
 - `opencode` is the exception: with no permission block it asks for nothing. Add one to
-  `OPENCODE_CONFIG_CONTENT` as shown in [AGENTS.md](AGENTS.md#per-cli-launch-commands-all-at-high-reasoning).
+  `OPENCODE_CONFIG_CONTENT`, next to the model. This one asks before every edit and every shell
+  command except `hc send`, and denies web fetches:
+
+  ```json
+  {"model":"MODEL#high","permission":{"edit":{"*":"ask"},"bash":{"*":"ask","hc send *":"allow"},"webfetch":"deny"}}
+  ```
