@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/hero.png" alt="Agent team" width="100%">
-</p>
-
 # Agent team
 
 **alpha** is the primary agent; it writes and builds, and delegates review work to **beta**.
