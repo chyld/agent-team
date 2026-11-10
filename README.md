@@ -190,7 +190,7 @@ For the `_alt` racers, name the `_alt` file and add "it is renamed later; do not
 | `codex` | Careful reviewer that invents requirements unless held to the one-pass, quote-the-spec rule. Trust prompt: `enter`. |
 | `grok` | Queues every message until its turn ends, and reviews slowly. Give it no review and no report file; its report is one `hc send`. Still asks before `rm`, `mv` and redirects. |
 | `agy` | Opens with a chained command that searches the home folder; refuse it and send "continue". Slow to react. Trust prompt: `enter`. |
-| `pi` | Never asks and has no sandbox, so its brief is its only limit. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. So far it has only led one worker in a trial, not a build. |
+| `pi` | Gamma agent or worker. Never asks and has no sandbox, so its brief or task is its only limit: check afterwards what it touched. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. So far it has only led one worker in a trial, not a build, and has not yet run as a worker. |
 | `muse` | Worker only: its sandbox blocks `hc run` and `hc send`. Trust prompt: `enter`. It answers in its chat and ends its turn. |
 | `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. |
 
