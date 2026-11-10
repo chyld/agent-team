@@ -128,10 +128,16 @@ handles it differently from the `opencode` workers:
 
 ### Tested: the full chain
 
-This test used the earlier structure, with `muse` as a seventh gamma agent and 15 workers. The
-current structure, with `muse` as a worker, has not been run yet.
+**Round 2, the current structure** (six gamma agents, 16 workers), run on 2026-11-09 with "what
+is 1³ + 2³ + ... + 12³?":
 
-Run once on 2026-11-09 with the question "what is 1² + 2² + ... + 14²?". Alpha briefed beta, beta
+- **The chain's answer was 6084, which is correct.** All six gamma agents delivered, all twelve
+  worker answers were right, nothing was reassigned and the reserve was not used.
+- It took about six minutes, again almost all of it approvals: 30 by beta, none refused.
+- **`muse` was dealt into the reserve, so "Muse as a worker" is still untested.**
+
+**Round 1, the earlier structure,** with `muse` as a seventh gamma agent and 15 workers, run the
+same day with the question "what is 1² + 2² + ... + 14²?". Alpha briefed beta, beta
 split it across the seven gamma agents and dealt the workers, each gamma agent asked its two
 workers for one square each and added them, and beta added the sums.
 
@@ -148,9 +154,9 @@ workers for one square each and added them, and beta added the sums.
 | Harness | Can it run workers? | What happens |
 |---|---|---|
 | `claude` | yes | No prompts, done in under a minute. |
-| `grok` | yes | `--allow 'Bash(hc:*)'` covers single `hc` commands only. It asked whenever it joined two with `&&`. |
-| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command: seven approvals per agent. |
-| `agy` | yes, slowly | Asks before every command and file read: seven approvals. Refusing a command ends its turn, so it then needs an `hc send` to carry on. |
+| `grok` | yes | `--allow 'Bash(hc:*)'` is unreliable. It asked for chained commands in round 1 and for two plain, long `hc run` commands in round 2. About two approvals a round. |
+| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command except `hc --skill`: seven to ten approvals per agent. |
+| `agy` | yes, slowly | Asks before every command and file read: about eight approvals. Refusing a command ends its turn, so it then needs an `hc send` to carry on. |
 | `muse` | **no** | Its sandbox blocks `hc run` (`cannot start core: Read-only file system`) and `hc send`. It can read `hc --skill` and nothing more. |
 
 ### Rules that came out of the test
@@ -168,8 +174,11 @@ workers for one square each and added them, and beta added the sums.
   follows a refusal with `hc send NAME "skip that step and continue with your brief"`.
 - **Read every screen right after launch.** Folder-trust prompts from `muse` and `agy` were not
   flagged as blocked. Accept trust only for the folder the work is in.
+- **After each approval, read the screens of every blocked child.** `hc wait --children any` does
+  not wake when a child goes from one prompt straight to the next, because its status never
+  changes. In round 2 a prompt sat for a minute this way.
 - **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
-  their parent about seven approvals a round. To cut that, the user has to decide to grant those
+  their parent eight to ten approvals a round. To cut that, the user has to decide to grant those
   harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
