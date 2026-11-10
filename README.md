@@ -128,13 +128,26 @@ handles it differently from the `opencode` workers:
 
 ### Tested: the full chain
 
+**Round 3, with `muse` forced into the deal,** run on 2026-11-09 with "what is 2¹ + 2² + ... +
+2¹²?":
+
+- **The chain's answer was 8190, which is correct.** All six parts and all twelve worker answers
+  were right, first time.
+- **`muse` works as a worker.** The shuffle left it in the reserve, so beta swapped it with a
+  randomly chosen dealt worker. Its gamma agent (`agy`) launched it with the command in
+  [Muse as a worker](#muse-as-a-worker), it answered in seconds, reported its own `done` status,
+  and was read off its screen, then killed and removed. `muse` raised no prompt of its own.
+- **Its folder-trust prompt is still untested.** None appeared, most likely because `muse` already
+  trusted the test folder from round 1.
+- It took about seven and a half minutes, with 34 approvals by beta and none refused.
+
 **Round 2, the current structure** (six gamma agents, 16 workers), run on 2026-11-09 with "what
 is 1³ + 2³ + ... + 12³?":
 
 - **The chain's answer was 6084, which is correct.** All six gamma agents delivered, all twelve
   worker answers were right, nothing was reassigned and the reserve was not used.
 - It took about six minutes, again almost all of it approvals: 30 by beta, none refused.
-- **`muse` was dealt into the reserve, so "Muse as a worker" is still untested.**
+- `muse` was dealt into the reserve, so it was not exercised until round 3.
 
 **Round 1, the earlier structure,** with `muse` as a seventh gamma agent and 15 workers, run the
 same day with the question "what is 1² + 2² + ... + 14²?". Alpha briefed beta, beta
@@ -178,7 +191,7 @@ workers for one square each and added them, and beta added the sums.
   not wake when a child goes from one prompt straight to the next, because its status never
   changes. In round 2 a prompt sat for a minute this way.
 - **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
-  their parent eight to ten approvals a round. To cut that, the user has to decide to grant those
+  their parent ten to twelve approvals a round. To cut that, the user has to decide to grant those
   harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
