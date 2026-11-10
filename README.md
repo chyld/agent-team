@@ -174,6 +174,36 @@ the tests, both from the same section of the spec, and the gamma agent ran the t
   against the spec's signatures and to keep its tests independent of the other modules, with
   small stand-ins. The lead writes the shared types before launching anyone.
 
+### Fixing test-writer stalls
+
+In three builds test writers stalled about half the time, on every model. Saved screens showed
+what a stall is: the worker reads the spec, then sits in one unbroken stretch of reasoning and
+never starts writing. It is not at a prompt and not looping on tools. Two changes took stalls from
+4 in 10 attempts to 0 in 12.
+
+- **Make the test task small and say so.** This did most of the work. The task that worked:
+
+  > Write `tests/test_MODULE.py` for the MODULE section of `SPEC.md`. Use `unittest`. Write at
+  > most 15 tests: first every example the spec states, with the exact values the spec gives, then
+  > one or two simple cases per function. Do not work out long expected strings by hand: when the
+  > spec gives no exact output, assert on something simple (a length, a prefix, a type, an
+  > exception). Do not plan at length. Write the file within two minutes, in one go; a short
+  > correct file now is worth more than a thorough one later. If importing another module fails
+  > for any reason (`except Exception`), use a small stand-in.
+
+- **Race two test writers on every module.** Each gamma agent starts three workers at once: the
+  code worker, the test worker, and a second test writer on the code worker's model, writing
+  `tests/test_MODULE_alt.py`. The gamma agent uses whichever file arrives first, keeps the second
+  if it also passes, and deletes it without a correction round if it fails. With no stalls the
+  race never had to rescue a module, but it saved a correction round where the first file was
+  wrong. It costs six more workers.
+- **Give code workers the same "do not plan at length" line.** They did not get it in round 7, and
+  the only stall was a code worker reasoning for three minutes.
+- **Save a stalled worker's screen before killing it,** with
+  `hc read NAME --lines 0 > .team/stall-NAME.txt`. That is how the cause was found.
+- **Apply "asks a second time means stalled" only before a worker has delivered.** Workers that
+  kept asking to run commands after writing their file caused a false stall report.
+
 ### Watching for stalled workers
 
 A worker stuck "thinking" never changes status, so nothing wakes its parent's `hc wait`. In the
@@ -205,6 +235,27 @@ were asleep in their waits.
   upward.
 
 ### Tested: the full chain
+
+**Round 7, the same build with the test-writer fixes,** run on 2026-11-09. Two changes: the
+smaller test task, and two test writers racing on every module; see
+[Fixing test-writer stalls](#fixing-test-writer-stalls).
+
+| | Round 6 | Round 7 |
+|---|---|---|
+| Result | 281 tests, 24 of 24 acceptance tests | 144 tests, 24 of 24 acceptance tests |
+| Time, beta start to report | about 16 minutes | about 15 minutes |
+| Test writers that stalled | 4 of 10 attempts | 0 of 12 |
+| Workers that stalled | 4 | 1, a code writer |
+| Approvals by beta | 3, and 1 refusal | 1, and 2 refusals |
+
+- **No test writer stalled.** Most delivered in 26 to 46 seconds, including on `report` and
+  `budget`, where they had stalled in every earlier build. Nine of twelve test files passed as
+  written.
+- **The build was only a minute faster,** because the one stall, a code writer on the `agy`
+  agent's module, set the time: replaced at 3m20s, and the replacement took 3m05s. The other five
+  modules were done within seven minutes of launch.
+- **Fewer tests, same result.** The team wrote 144 tests against 281, and the hidden acceptance
+  tests passed either way.
 
 **Round 6, the same build with launch grants,** run on 2026-11-09. The user decided to grant
 `codex` and `agy` their routine `hc` commands at launch; see
