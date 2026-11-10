@@ -7,9 +7,11 @@ Allows, as single unchained commands only:
   hc send to its own workers or to its parent (id in .team/parent-id)
   hc run that starts a worker named w-GAMMA-N running opencode or muse, with no bypass flags
   python3 -m unittest ...                      ls of relative paths inside the folder
-  rm tests/test_MODULE_alt.py                  (the losing file of a test-writer race)
+  rm tests/test_MODULE_alt.py | rm tally/MODULE_alt.py | mv tally/MODULE_alt.py tally/MODULE.py
+                                               (settling a race between two workers)
+  date [+FORMAT]
 It grants nothing by itself. The agent is launched with an allow-list for commands starting with
-`hc`, `python3 -m unittest`, `ls` and `rm tests/test_`; this hook answers "force_ask" for any such command that is
+`hc`, `python3 -m unittest`, `ls`, `date`, `rm tests/test_`, `rm tally/` and `mv tally/`; this hook answers "force_ask" for any such command that is
 not one of the forms above, so that it still goes to the parent for approval.
 """
 import json, os, re, shlex, sys
@@ -61,7 +63,12 @@ if toks[0] == "hc" and len(toks) > 1:
 elif toks[:3] == ["python3", "-m", "unittest"]:
     ok = True
 elif toks[0] == "rm":
-    ok = len(toks) == 2 and bool(re.match(r"^tests/test_[a-z]+_alt\.py$", toks[1]))
+    ok = len(toks) == 2 and bool(re.match(r"^(tests/test_[a-z]+_alt|tally/[a-z]+_alt)\.py$", toks[1]))
+elif toks[0] == "mv":
+    m = re.match(r"^tally/([a-z]+)_alt\.py$", toks[1]) if len(toks) == 3 else None
+    ok = bool(m) and toks[2] == "tally/%s.py" % m.group(1)
+elif toks[0] == "date":
+    ok = len(toks) <= 2 and all(t.startswith("+") for t in toks[1:])
 elif toks[0] == "ls":
     ok = all(t.startswith("-") or not (t.startswith(("/", "~")) or ".." in t) for t in toks[1:])
 out("ask" if ok else "force_ask", "" if ok else "not a routine command for this agent")

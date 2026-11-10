@@ -204,6 +204,28 @@ never starts writing. It is not at a prompt and not looping on tools. Two change
 - **Apply "asks a second time means stalled" only before a worker has delivered.** Workers that
   kept asking to run commands after writing their file caused a false stall report.
 
+### Fixing code-writer stalls
+
+- **Give code writers the "write now" line too:** "Do not plan at length: start writing within
+  one minute and finish within two, in one go."
+- **Race two code writers on every module.** Each gamma agent starts four workers at once: code
+  (`tally/MODULE.py`), tests, a second test writer on the code worker's model, and a second code
+  writer on the test worker's model writing `tally/MODULE_alt.py`. Whichever module file exists
+  first is used. If it is the `_alt` file, the gamma agent kills the first code worker and then
+  moves the file into place; always kill before moving. No `_alt` module file is left at the end.
+- **A race replaces the stall rule for the first minutes.** Nobody has to notice anything or ask
+  beta for a replacement; the slow worker is simply killed when the fast one delivers.
+- **Have the gamma agent save a loser's screen before killing it.** The race kills non-deliverers
+  at about a minute, before beta's three-minute watch sees them.
+- **Limit the read-through:** one pass, at most one correction message, and every point must quote
+  the sentence of the spec the code breaks. This stopped `codex` inventing requirements. Add a
+  time limit of two minutes as well; `grok` spent four.
+- **The test race can probably go.** No test writer stalled in rounds 7 or 8, so the smaller task
+  was enough, and the race costs six workers. The code race earned its place.
+- **Open problems:** one `opencode` worker was asked to approve a write to its own allowed file,
+  probably a path spelled differently from the two allowed forms; and `agy` prompted for
+  `rm tally/MODULE_alt.py` although its allow-list and hook cover it.
+
 ### Watching for stalled workers
 
 A worker stuck "thinking" never changes status, so nothing wakes its parent's `hc wait`. In the
@@ -235,6 +257,29 @@ were asleep in their waits.
   upward.
 
 ### Tested: the full chain
+
+**Round 8, the same build with the code-writer fixes,** run on 2026-11-09. Changes: code
+writers got the "write now" line, two code writers raced on every module, and the read-through
+was limited to one pass whose every point must quote the spec; see
+[Fixing code-writer stalls](#fixing-code-writer-stalls).
+
+| | Round 7 | Round 8 |
+|---|---|---|
+| Result | 144 tests, 24 of 24 acceptance tests | 173 tests, 24 of 24 acceptance tests |
+| Time, beta start to report | about 15 minutes | about 13 minutes |
+| Workers that stalled a module | 1 | 0 |
+| Slowest module | 10m40s, a stalled code writer | 9m20s, `grok`'s read-through |
+| Approvals by beta | 1, and 2 refusals | 3, and 1 refusal |
+
+- **No module stalled.** Ten of twelve code writers delivered within 54 seconds. The second code
+  writer won the race in three of six modules, and in one of them the first was stuck at a
+  permission prompt and would have been a three-minute stall.
+- **`codex` stayed inside the spec.** With the one-pass rule both `codex` agents finished in two
+  to four and a half minutes and sent no beyond-spec corrections.
+- **The slow part moved to `grok`.** Its module and tests were on disk two minutes after launch;
+  it then spent four minutes on its read-through, and beta's message overruling it sat in grok's
+  queue for over a minute. Five modules were done within five minutes of launch.
+- **Across the five builds:** 22, 23, 16, 15 and 13 minutes, and 75, 102, 3, 1 and 3 approvals.
 
 **Round 7, the same build with the test-writer fixes,** run on 2026-11-09. Two changes: the
 smaller test task, and two test writers racing on every module; see
