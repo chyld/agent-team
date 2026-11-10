@@ -66,6 +66,10 @@ as teams of their own.
   gamma agents in the same round.
 - **If beta starts fewer than six gamma agents,** each still gets two, and the rest of the pool
   sits out.
+- **Four in reserve is not enough for a build.** The second build had seven stalls and used up
+  the reserve in five minutes. When it is empty, beta may hand a gamma agent a worker that has
+  already finished its job for another gamma agent and been removed. No worker does two jobs at
+  once.
 - **The workers sitting out are the reserve.** When a worker fails or stalls, beta hands its gamma
   agent one from the reserve. Beta writes the replacement's exact launch command into a file and
   tells the gamma agent with `hc send` to kill the old worker and follow the file. A long command
@@ -143,16 +147,29 @@ the tests, both from the same section of the spec, and the gamma agent ran the t
   file itself. In the build test one round was always enough and nothing was edited by hand.
 - **Have the gamma agent read the code after the tests pass.** The only real bug in a module was
   one its tests did not catch; the gamma agent found it by reading.
-- **Give the code to any worker and the tests to a stronger one.** All six code workers produced
-  correct modules, most in under a minute, free models included. Test-writing was the weak point:
-  three of six first-choice test workers produced nothing, and two replacements wrote tests with
-  wrong expected values. Every test failure in the run was a bug in a test.
+- **Have it check only what the spec states.** In the second build a `codex` agent's read-through
+  tightened a module beyond the spec, broke a case that had worked, and needed a second round to
+  undo it. Say "do not add requirements the spec does not state" in the brief, and have beta
+  refuse corrections that do.
+- **Code is easy for the workers; tests are a coin toss.** Over two builds, 12 of 13 code workers
+  delivered a correct module, most in under a minute, free models included. Test writers stalled
+  about half the time: 3 of 6 in the first build and 6 of 11 attempts in the second.
+- **No model is reliably a good test writer.** After the first build this README listed four
+  models that "wrote tests well" and the second build gave them the tests. Three of the four
+  stalled, and the fourth wrote one test file in 97 seconds and stalled on the next. Do not pick
+  test writers from a list. Plan for half of them to fail and replace them quickly.
 
-  | Wrote tests well | Produced nothing as a test writer |
-  |---|---|
-  | `opencode-go/hy4`, `opencode-go/glm-5.3-flash`, `opencode/mimo-v2.6-flash-free`, `opencode/nemotron-3.5-super-vl-free` | `opencode/flint-40b-free`, `opencode/nemotron-3.5-lightning-free`, `opencode/glm-5.3-flash-free` |
-
-  This is one run, so treat it as a first reading, not a ranking.
+  | Model | As test writer, build 1 | Build 2 |
+  |---|---|---|
+  | `muse` | not used | delivered twice, about a minute each |
+  | `opencode-go/minimax-m3.1-flash` | delivered, with wrong expected values | delivered |
+  | `opencode/inkling-2-small-free`, `opencode/iceman-free` | not used | delivered |
+  | `opencode/nemotron-3.5-super-vl-free` | delivered | delivered once, stalled once |
+  | `opencode-go/hy4`, `opencode-go/glm-5.3-flash`, `opencode/mimo-v2.6-flash-free` | delivered | stalled |
+  | `opencode/flint-40b-free`, `opencode/nemotron-3.5-lightning-free`, `opencode/glm-5.3-flash-free` | produced nothing | given code instead: one delivered, one stalled, one tried to write in another folder |
+  | `opencode/longcat-2.5-free` | not used | stalled |
+- **Quote `hc send` text in single quotes.** In double quotes the shell turned `$1.00` in a
+  correction into `.00`.
 - **Modules that depend on each other land at the same time.** Tell each gamma agent to code
   against the spec's signatures and to keep its tests independent of the other modules, with
   small stand-ins. The lead writes the shared types before launching anyone.
@@ -165,9 +182,16 @@ beta if a worker has produced nothing after five minutes" did not work, because 
 were asleep in their waits.
 
 - **Gamma agents wait with a timeout,** `hc wait --children all --timeout 60`, and after each
-  timeout check how long each worker has been running and whether its file exists.
-- **Beta checks the workers' screens itself at about five minutes.** This is the one place a level
-  looks past the level below it. Beta only reads; it still acts through the gamma agent.
+  wait read each worker's screen and check whether its file exists. A worker with no file three
+  minutes after launch is reported to beta as stalled.
+- **Beta checks the workers' screens itself at three and five minutes.** This is the one place a
+  level looks past the level below it. Beta only reads; it still acts through the gamma agent.
+- **This worked in the second build.** Five of seven stalls were reported by the gamma agent
+  itself within three to four minutes, against eight minutes and nobody in the first. Beta's own
+  watch caught the other two first, including a worker trying to write in another project's
+  folder. No worker killed at three minutes showed any sign it would have delivered.
+- **It costs approvals.** Each one-minute cycle is a wait, two screen reads and a file check. For
+  a `codex` or `agy` gamma agent that is two to four approvals a minute from beta.
 - **`grok` queues incoming messages until its turn ends,** including hc's notices about its own
   workers. It reacts late, so do not rely on it to catch a stall.
 
@@ -181,6 +205,30 @@ were asleep in their waits.
   upward.
 
 ### Tested: the full chain
+
+**Round 5, the same build again with the new rules,** run on 2026-11-09 from the same spec in a
+fresh folder, with the same module split and a new shuffle.
+
+| | Round 4 | Round 5 |
+|---|---|---|
+| Result | 238 tests and 24 of 24 acceptance tests pass | 239 tests and 24 of 24 acceptance tests pass |
+| Time, beta start to report | about 22 minutes | about 23 minutes |
+| Workers that stalled | 3 | 7 |
+| Time to notice a stall | about 8 minutes, by beta only | 3 to 4 minutes, 5 of 7 by the gamma agent |
+| Approvals by beta | 75 | 102, and 4 refusals |
+| Files edited by hand by a gamma agent | none | none |
+
+- **Stall detection is fixed.** The timeout wait and the three-minute rule did what they were
+  meant to.
+- **The build was not faster.** More than twice as many workers stalled, the "wrote tests well"
+  list did not predict who would, and the extra checking added about 27 approvals. Quicker
+  detection paid for the extra stalls and no more.
+- **Approvals are now the limit:** `codex` 58 for two agents, `agy` 40 for one, `grok` 1,
+  `claude` 0. The slowest module both times was the `agy` agent's.
+- **`agy` ignored its brief's first instruction again** and opened with a chained command that
+  searched the home folder. It was refused both times.
+- **A worker tried to write a file in the first build's folder.** Its one-file permission block
+  stopped it at a prompt, and its gamma agent rejected it.
 
 **Round 4, a real build,** run on 2026-11-09. The task was `tally`, a plain-text expense tracker
 in Python: six library modules, a command-line tool and tests, to a written spec. Beta wrote the
@@ -271,7 +319,7 @@ workers for one square each and added them, and beta added the sums.
 - **Hold back acceptance tests.** Alpha wrote its own tests from the spec and did not show them to
   the team. That is what made "done" checkable.
 - **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
-  their parent ten to twelve approvals in a quiz round and 22 to 27 in a real build. To cut that, the user has to decide to grant those
+  their parent ten to twelve approvals in a quiz round and 22 to 40 in a real build. To cut that, the user has to decide to grant those
   harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
