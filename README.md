@@ -1,7 +1,7 @@
 # Agent team
 
-Alpha leads, beta manages, gamma does the work with help, and delta and epsilon are the pool of
-workers that gamma draws from. See [Chain of command](#chain-of-command).
+Alpha leads, beta manages, the six gamma agents do the work with help, and delta and epsilon are
+the pool of 16 workers that gamma draws from. See [Chain of command](#chain-of-command).
 
 | # | Team | Harness | Model | Reasoning |
 |---|---|---|---|---|
@@ -12,8 +12,8 @@ workers that gamma draws from. See [Chain of command](#chain-of-command).
 | 4 | gamma | `codex` | `gpt-6.1-sol` | high |
 | 5 | gamma | `codex` | `gpt-6.1-terra` | high |
 | 6 | gamma | `grok` | `grok-4.7` | high |
-| 7 | gamma | `muse` | `muse-ember-1.0` | high |
-| 8 | gamma | `agy` | `gemini-4-argon` | high |
+| 7 | gamma | `agy` | `gemini-4-argon` | high |
+| 8 | delta | `muse` | `muse-ember-1.0` | high |
 | 9 | delta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
 | 10 | delta | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
 | 11 | delta | `opencode` | `opencode-go/glm-5.3-flash` | high |
@@ -37,13 +37,13 @@ Work flows down one level at a time, and reports flow back up the same way.
 ```
 alpha (0)
   └─ beta (1)
-       └─ gamma (2-8), seven agents
-            └─ two workers each, dealt at random from delta + epsilon (9-23)
+       └─ gamma (2-7), six agents
+            └─ two workers each, dealt at random from delta + epsilon (8-23)
 ```
 
 - **Alpha delegates only to beta.** Alpha takes the task from the user, writes the brief for beta,
   waits for beta's report, checks it, and answers the user. Alpha never starts gamma or the workers.
-- **Beta delegates only to gamma.** Beta splits the task into up to seven parts, starts one gamma
+- **Beta delegates only to gamma.** Beta splits the task into up to six parts, starts one gamma
   agent per part, deals each one its workers, collects the gamma reports and combines them into
   one report for alpha.
 - **Gamma delegates only to its own workers.** Each gamma agent starts the two workers beta dealt
@@ -54,48 +54,68 @@ alpha (0)
 
 ### Dealing the workers
 
-Delta and epsilon are one pool of 15 workers. They no longer act as teams of their own.
+Delta and epsilon are one pool of 16 workers: 15 `opencode` models and `muse`. They no longer act
+as teams of their own.
 
-- **Each gamma agent gets two workers.** Seven gamma agents take 14 of the 15, so every gamma
-  agent has the same number.
-- **One worker sits out each round.** Fifteen does not divide by seven. The one left over is
-  whichever comes last in the shuffle, so it changes from round to round.
+- **Each gamma agent gets two workers.** Six gamma agents take 12 of the 16, so every gamma agent
+  has the same number.
+- **Four workers sit out each round.** Sixteen does not divide by six. The four left over are
+  whichever come last in the shuffle, so they change from round to round.
 - **Beta shuffles the pool every time it hands out workers.** A new round of gamma work means a
   new shuffle: no gamma agent keeps its workers from the last round, and no worker is given to two
   gamma agents in the same round.
-- **If beta starts fewer than seven gamma agents,** each still gets two, and the rest of the pool
+- **If beta starts fewer than six gamma agents,** each still gets two, and the rest of the pool
   sits out.
+- **The workers sitting out are the reserve.** If a worker fails, its gamma agent reports that to
+  beta, and beta hands it one from the reserve.
 
-Beta deals with this. It prints one line per gamma agent with its two workers:
+Beta deals with this. Each pool entry is a harness and a model. It prints one line per gamma agent
+with its two workers:
 
 ```sh
 pool=(
-  'openrouter/deepseek/deepseek-v4.1-flash-1017#high'
-  'opencode-go/minimax-m3.1-flash#high'
-  'opencode-go/glm-5.3-flash#high'
-  'opencode-go/kimi-k3.1-pro#high'
-  'opencode-go/hy4#high'
-  'opencode/beam-free#high'
-  'opencode/deepseek-v4.1-flash-free#high'
-  'opencode/flint-40b-free#high'
-  'opencode/glm-5.3-flash-free#high'
-  'opencode/iceman-free'
-  'opencode/inkling-2-small-free#high'
-  'opencode/longcat-2.5-free'
-  'opencode/mimo-v2.6-flash-free'
-  'opencode/nemotron-3.5-lightning-free'
-  'opencode/nemotron-3.5-super-vl-free#high'
+  'muse muse-ember-1.0'
+  'opencode openrouter/deepseek/deepseek-v4.1-flash-1017#high'
+  'opencode opencode-go/minimax-m3.1-flash#high'
+  'opencode opencode-go/glm-5.3-flash#high'
+  'opencode opencode-go/kimi-k3.1-pro#high'
+  'opencode opencode-go/hy4#high'
+  'opencode opencode/beam-free#high'
+  'opencode opencode/deepseek-v4.1-flash-free#high'
+  'opencode opencode/flint-40b-free#high'
+  'opencode opencode/glm-5.3-flash-free#high'
+  'opencode opencode/iceman-free'
+  'opencode opencode/inkling-2-small-free#high'
+  'opencode opencode/longcat-2.5-free'
+  'opencode opencode/mimo-v2.6-flash-free'
+  'opencode opencode/nemotron-3.5-lightning-free'
+  'opencode opencode/nemotron-3.5-super-vl-free#high'
 )
-gamma=(sonnet haiku sol terra grok muse argon)
+gamma=(sonnet haiku sol terra grok argon)
 mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
 for i in "${!gamma[@]}"; do
-  echo "${gamma[i]}: ${deal[2*i]} ${deal[2*i+1]}"
+  echo "${gamma[i]}: [${deal[2*i]}] [${deal[2*i+1]}]"
 done
-echo "sits out: ${deal[14]}"
+printf 'sits out: [%s]\n' "${deal[@]:12}"
 ```
 
-Beta writes each gamma agent's two workers into that agent's brief, as the exact model strings
-above. The `#high` suffix is already there for the models that have it.
+Beta writes each gamma agent's two workers into that agent's brief, as the exact harness and
+model above. The `#high` suffix is already there for the `opencode` models that have it.
+
+### Muse as a worker
+
+`muse` was a gamma agent until the full-chain test showed its sandbox cannot run `hc run` or
+`hc send`. A worker needs neither, so it is now in the pool. A gamma agent that is dealt `muse`
+handles it differently from the `opencode` workers:
+
+- **Launch:** `hc run --bg --name NAME --cwd "$PWD" -- muse --model muse-ember-1.0 --effort high "PROMPT"`.
+  There is no `OPENCODE_CONFIG_CONTENT` and no `#high`; its own sandbox is its permission limit.
+  Do not disable it.
+- **Trust prompt:** in a folder it has not seen, `muse` stops at a folder-trust prompt that is not
+  flagged as blocked. Read its screen right after launch and accept with `hc keys NAME enter`,
+  for the work folder only.
+- **Result:** it cannot `hc send`. Tell it to answer in its chat and end its turn. It reports its
+  own `done` status, which `hc wait --children` picks up; then read its screen.
 
 ### What each level's brief must say
 
@@ -107,6 +127,9 @@ above. The `#high` suffix is already there for the models that have it.
   upward.
 
 ### Tested: the full chain
+
+This test used the earlier structure, with `muse` as a seventh gamma agent and 15 workers. The
+current structure, with `muse` as a worker, has not been run yet.
 
 Run once on 2026-11-09 with the question "what is 1² + 2² + ... + 14²?". Alpha briefed beta, beta
 split it across the seven gamma agents and dealt the workers, each gamma agent asked its two
@@ -132,9 +155,8 @@ workers for one square each and added them, and beta added the sums.
 
 ### Rules that came out of the test
 
-- **Do not give `muse` a part that needs workers.** Until its sandbox can reach hc, it can only
-  do a part by itself, and its parent has to read its screen for the result, because it cannot
-  `hc send`. Do not disable its sandbox to get round this.
+- **`muse` cannot manage workers, so it moved to the worker pool.** See
+  [Muse as a worker](#muse-as-a-worker). Do not disable its sandbox to get round this.
 - **A missing part means the answer is incomplete.** When a gamma agent fails, beta gives that
   part to a gamma agent that has finished, together with the failed agent's two workers, and
   only reports a total once every part is in. If it cannot, it reports the answer as incomplete
