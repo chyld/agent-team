@@ -206,6 +206,36 @@ were asleep in their waits.
 
 ### Tested: the full chain
 
+**Round 6, the same build with launch grants,** run on 2026-11-09. The user decided to grant
+`codex` and `agy` their routine `hc` commands at launch; see
+[Granting gamma agents their hc commands](#granting-gamma-agents-their-hc-commands). Nothing else
+changed except that test writers were no longer picked from a list and finished workers could be
+re-used as replacements.
+
+| | Round 5 | Round 6 |
+|---|---|---|
+| Result | 239 tests, 24 of 24 acceptance tests | 281 tests, 24 of 24 acceptance tests |
+| Time, beta start to report | about 23 minutes | about 16 minutes |
+| Approvals by beta | 102, and 4 refusals | 3, and 1 refusal |
+| `codex` module times | 11.5 and 12 minutes | 4 and 6 minutes |
+| Workers that stalled | 7 | 4, all test writers |
+
+- **The approval load is gone.** `codex` asked for nothing, `agy` for nothing routine. The three
+  approvals were all `grok`. The one refusal was `agy`'s chained opening command, which the hook
+  sent to beta as intended.
+- **Stalled test writers are now what sets the time.** The slowest module went through three test
+  writers and took 12 minutes; the others took 3 to 7.
+- **Re-use a worker that has just delivered tests.** As replacements, workers that had already
+  delivered a test file in the same run delivered again, 3 of 3, in under a minute. One that had
+  delivered only code stalled.
+- **The three-minute rule costs about four minutes a stall,** and one worker killed at three
+  minutes had delivered at 3:38.
+- **What beta can no longer see:** with the grant, `codex` runs commands without asking, so beta
+  has no list of them. It checked afterwards that only the expected files existed and that the
+  earlier builds' folders were untouched.
+- **One broken module blocked the other modules' tests** for a few minutes: the stand-ins were
+  used only on `ImportError`, and the module had a syntax error. Catch `Exception` there.
+
 **Round 5, the same build again with the new rules,** run on 2026-11-09 from the same spec in a
 fresh folder, with the same module split and a new shuffle.
 
@@ -288,8 +318,8 @@ workers for one square each and added them, and beta added the sums.
 |---|---|---|
 | `claude` | yes | Fastest, and no prompts, because it runs in auto mode here. That also means its parent never gets to approve or refuse anything it does. |
 | `grok` | yes | `--allow 'Bash(hc:*)'` is unreliable: it asked for chained commands and for plain, long `hc run` commands. Two to four approvals a round. It queues incoming messages until its turn ends. |
-| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command except `hc --skill`: ten for a quiz, 22 per agent in the build. The most careful reviewer, but it also invents requirements nobody asked for. |
-| `agy` | yes, slowly | Asks before every command and file read: twelve for a quiz, 27 in the build. Its first move in the build was a chained command that searched the home folder, which was refused. Refusing a command ends its turn, so it then needs an `hc send` to carry on. It can show `done` while a background wait is still running. |
+| `codex` | yes | With the launch grant it asks for nothing and was the second-fastest manager. Without it, its sandbox cannot reach the hc core, so it asks before every `hc` command except `hc --skill`: ten for a quiz, 22 per agent in the build. The most careful reviewer, but it also invents requirements nobody asked for. |
+| `agy` | yes | With the launch grant and hook it runs its routine commands unasked. Without them it asks before every command and file read: twelve for a quiz, 27 in the build. Its first move in the build was a chained command that searched the home folder, which was refused. Refusing a command ends its turn, so it then needs an `hc send` to carry on. It can show `done` while a background wait is still running. |
 | `muse` | **no** | Its sandbox blocks `hc run` (`cannot start core: Read-only file system`) and `hc send`. It can read `hc --skill` and nothing more. |
 
 ### Rules that came out of the test
@@ -319,8 +349,9 @@ workers for one square each and added them, and beta added the sums.
 - **Hold back acceptance tests.** Alpha wrote its own tests from the spec and did not show them to
   the team. That is what made "done" checkable.
 - **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
-  their parent ten to twelve approvals in a quiz round and 22 to 40 in a real build. To cut that, the user has to decide to grant those
-  harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
+  their parent ten to twelve approvals in a quiz round and 22 to 40 in a real build. The user can
+  remove that cost by granting those harnesses the `hc` commands at launch, as below; an agent
+  must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
 for everything below.
@@ -329,6 +360,31 @@ Each subagent is one `hc run` command: a name, a harness, a model, a reasoning l
 starts the harness interactively in its own herdr-core terminal, as a child of yours, so it stays
 watchable and steerable. Never use a one-shot mode (`claude -p`, `grok -p`, `agy -p`, `codex exec`,
 `muse exec`, `opencode run`).
+
+## Granting gamma agents their hc commands
+
+This is the user's decision, not an agent's. In round 6 it cut beta's approvals from 102 to 3 and
+the build from 23 minutes to 16.
+
+- **`codex`:** add `-s workspace-write -a on-request -c 'sandbox_workspace_write.network_access=true'`.
+  The sandbox blocks the socket to the hc core unless network access is on. This is wider than
+  `hc`: every command it runs can also reach the network, and none of them prompt, so its parent
+  sees nothing. Say "no network use" in its brief and check afterwards what it touched.
+- **`agy`:** add
+  `--mode accept-edits --settings '{"permissions":{"allow":["command(hc)","command(python3 -m unittest)","command(ls)"]}}'`
+  and put [`hooks/agy/`](hooks/agy) from this repo into the work folder as `.agents/hooks.json`
+  and `.agents/allow-hc.py`. `--settings` lasts for the session and is never saved.
+  - The allow-list alone would allow any command starting with `hc`. The hook narrows it: it
+    answers `force_ask` unless the command is a single unchained `hc --skill`, `hc ls`, `hc wait`;
+    `hc read`, `keys`, `kill` or `rm` on a terminal named `w-GAMMA-N`; `hc send` to `w-GAMMA-N` or
+    to the parent; `hc run` of a worker named `w-GAMMA-N` running `opencode` or `muse`;
+    `python3 -m unittest`; or `ls` of relative paths.
+  - `GAMMA` is the argument in `hooks.json` (`./allow-hc.py argon`). The parent writes its own
+    terminal id into `.team/parent-id` before launching.
+  - A hook answering `allow` does not skip `agy`'s prompt by itself; only the allow-list does.
+    The hook can only make things stricter.
+- **`grok`** still asks for a few commands (`stat`, writing its own report) whatever its flags.
+- **`claude`** needs nothing: it already runs in auto mode.
 
 ## How to call each harness
 
