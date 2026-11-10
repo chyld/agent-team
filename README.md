@@ -13,12 +13,13 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 5 | gamma | `codex` | `gpt-6.1-terra` | high |
 | 6 | gamma | `grok` | `grok-4.7` | high |
 | 7 | gamma | `agy` | `gemini-4-argon` | high |
-| 8–23 | worker | `muse` and 15 `opencode` models | see [the pool](#dealing-the-workers) | |
+| 8 | gamma | `pi` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` | high |
+| 9–24 | worker | `muse` and 15 `opencode` models | see [the pool](#dealing-the-workers) | |
 
 ## Chain of command
 
 ```
-alpha ── beta ── six gamma agents ── workers (dealt at random from the pool)
+alpha ── beta ── seven gamma agents ── workers (dealt at random from the pool)
 ```
 
 - **Alpha** takes the task from the user, writes the spec and beta's brief, and checks the result
@@ -35,7 +36,7 @@ alpha ── beta ── six gamma agents ── workers (dealt at random from t
 1. **Alpha** writes `SPEC.md` and `brief-beta.md` in a new folder, writes acceptance tests
    elsewhere, and starts beta with `Read brief-beta.md and follow it exactly.`
 2. **Beta** writes the shared types first, then [deals the workers](#dealing-the-workers), writes
-   one brief file per gamma agent (`.team/brief-g-NAME.md`) and launches all six.
+   one brief file per gamma agent (`.team/brief-g-NAME.md`) and launches all seven.
 3. **Each gamma agent starts four workers at once**, two racing on the code and two on the tests:
 
    | Worker | Writes | Model |
@@ -61,8 +62,8 @@ and 2 approvals with these rules.
 
 ## Launch commands
 
-Every agent is one command, run interactively (never `claude -p`, `codex exec`, `opencode run`
-and the like):
+Every agent is one command, run interactively (never `claude -p`, `codex exec`, `pi -p`,
+`opencode run` and the like):
 
 ```sh
 hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
@@ -74,6 +75,7 @@ hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
 | `codex` | `codex --no-daemon -m MODEL -c model_reasoning_effort='"high"' -s workspace-write -a on-request -c 'sandbox_workspace_write.network_access=true' "PROMPT"` |
 | `grok` | `grok -m MODEL --effort high --permission-mode acceptEdits --allow 'Bash(hc:*)' --allow 'Bash(python3 -m unittest:*)' "PROMPT"` |
 | `agy` | `agy --model MODEL --effort high --mode accept-edits --settings '{"permissions":{"allow":["command(hc)","command(python3 -m unittest)","command(ls)","command(date)","command(rm)","command(mv)"]}}' -i "PROMPT"` |
+| `pi` | `pi --model MODEL --thinking high "PROMPT"` |
 
 The `codex` and `agy` flags grant them their routine `hc` commands so that beta is not asked to
 approve each one. That grant is the user's decision; agents never widen permissions on their own.
@@ -84,6 +86,9 @@ approve each one. That grant is the user's decision; agents never widen permissi
   `.agents/allow-hc.py`. The hook narrows the allow-list to single, unchained commands on the
   agent's own workers (`w-GAMMA-N`); anything else still prompts. Set the agent's short name in
   `hooks.json`, and have beta write its own terminal id into `.team/parent-id`.
+- **`pi`:** it has no approval prompts and no sandbox, so none of its commands prompt. Say what
+  it may touch in its brief and check afterwards what it touched. `MODEL` is the full id from
+  the table above, with the provider in front.
 
 Workers:
 
@@ -99,7 +104,7 @@ hc run --bg --name NAME --cwd "$PWD" -- muse --model muse-ember-1.0 --effort hig
 
 ## Dealing the workers
 
-Beta shuffles the pool once per build. Each gamma agent gets two workers and four sit out as the
+Beta shuffles the pool once per build. Each gamma agent gets two workers and two sit out as the
 reserve. If the pair has `muse`, it is the second worker; otherwise put a paid model second.
 
 ```sh
@@ -121,12 +126,12 @@ pool=(
   'opencode opencode/nemotron-3.5-lightning-free'
   'opencode opencode/nemotron-3.5-super-vl-free#high'
 )
-gamma=(sonnet haiku sol terra grok argon)
+gamma=(sonnet haiku sol terra grok argon ultra)
 mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
 for i in "${!gamma[@]}"; do
   echo "${gamma[i]}: [${deal[2*i]}] [${deal[2*i+1]}]"
 done
-printf 'sits out: [%s]\n' "${deal[@]:12}"
+printf 'sits out: [%s]\n' "${deal[@]:14}"
 ```
 
 A stall is when neither racing file exists after three minutes (four for tests). Beta then hands
@@ -179,6 +184,7 @@ For the `_alt` racers, name the `_alt` file and add "it is renamed later; do not
 | `codex` | Careful reviewer that invents requirements unless held to the one-pass, quote-the-spec rule. Trust prompt: `enter`. |
 | `grok` | Queues every message until its turn ends, and reviews slowly. Give it no review and no report file; its report is one `hc send`. Still asks before `rm`, `mv` and redirects. |
 | `agy` | Opens with a chained command that searches the home folder; refuse it and send "continue". Slow to react. Trust prompt: `enter`. |
+| `pi` | Never asks and has no sandbox, so its brief is its only limit. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. So far it has only led one worker in a trial, not a build. |
 | `muse` | Worker only: its sandbox blocks `hc run` and `hc send`. Trust prompt: `enter`. It answers in its chat and ends its turn. |
 | `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. |
 
