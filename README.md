@@ -101,6 +101,32 @@ hc kill sonnet; hc rm sonnet
   `hc read NAME --lines 0` and decide. Never `--force` past it.
 - When you have the results, kill and remove every terminal you started, and only those.
 
+## Nested agents
+
+A subagent can start subagents of its own. Tested with Sonnet 5.5 starting the five delta agents,
+asking each a math question, and reporting back: it worked, with all five answers collected.
+
+- **Say so explicitly.** A subagent must not start agents unless its task assigns that. Name the
+  agents it may start, and tell it to start no others.
+- **Give it a brief file.** The middle agent needs more than one line: which agents to start, the
+  exact launch command, how to collect, how to clean up and how to report. Put that in a file and
+  make its task `Read brief.md in this folder and follow it exactly.`
+- **Tell it to read the hc skill first,** the same as you did: `hc --skill`.
+- **Its children are its own.** They are children of the middle agent, not of you. They end when it
+  ends, `hc wait --children` in your terminal does not see them, and you wait only on the middle
+  agent. `hc ls` still lists every terminal, with its parent.
+- **Write your terminal id into the brief as a literal,** e.g. `hc send t3 "done"`. In a brief file
+  nothing expands `$HC_TERMINAL_ID`, and inside the middle agent it would be that agent's own id.
+- **Do not trust status alone for `opencode` agents.** `hc wait --children all` returned at once
+  with every child `idle` before two of them had answered, and in other runs a finished agent
+  stayed `working`. Tell the middle agent to read each screen with `hc read NAME --lines 0`, and to
+  wait again if an answer is not there yet.
+- **Each level cleans up its own.** The middle agent kills and removes the terminals it started
+  before it reports. You then kill and remove the middle agent.
+- **Permission prompts stop at the middle agent.** A blocked grandchild notifies its parent, not
+  you. Say in the brief what the middle agent may approve; the safe default is to approve nothing
+  and report it.
+
 ## Notes
 
 - To run several subagents at once, start each one with its own `--name`; `--bg` returns at once.
