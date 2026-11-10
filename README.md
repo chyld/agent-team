@@ -1,5 +1,8 @@
 # Agent team
 
+Alpha leads, beta manages, gamma does the work with help, and delta and epsilon are the pool of
+workers that gamma draws from. See [Chain of command](#chain-of-command).
+
 | # | Team | Harness | Model | Reasoning |
 |---|---|---|---|---|
 | 0 | alpha | `claude` | `claude-fable-5-2` | high |
@@ -26,6 +29,91 @@
 | 21 | epsilon | `opencode` | `opencode/mimo-v2.6-flash-free` | default |
 | 22 | epsilon | `opencode` | `opencode/nemotron-3.5-lightning-free` | default |
 | 23 | epsilon | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+
+## Chain of command
+
+Work flows down one level at a time, and reports flow back up the same way.
+
+```
+alpha (0)
+  └─ beta (1)
+       └─ gamma (2-8), seven agents
+            └─ two workers each, dealt at random from delta + epsilon (9-23)
+```
+
+- **Alpha delegates only to beta.** Alpha takes the task from the user, writes the brief for beta,
+  waits for beta's report, checks it, and answers the user. Alpha never starts gamma or the workers.
+- **Beta delegates only to gamma.** Beta splits the task into up to seven parts, starts one gamma
+  agent per part, deals each one its workers, collects the gamma reports and combines them into
+  one report for alpha.
+- **Gamma delegates only to its own workers.** Each gamma agent starts the two workers beta dealt
+  it, gives them pieces of its part, checks what comes back, and reports to beta.
+- **Workers delegate to no one.** They do the piece they are given and answer.
+- Nobody skips a level, in either direction. A worker reports to its gamma agent, never to beta
+  or alpha.
+
+### Dealing the workers
+
+Delta and epsilon are one pool of 15 workers. They no longer act as teams of their own.
+
+- **Each gamma agent gets two workers.** Seven gamma agents take 14 of the 15, so every gamma
+  agent has the same number.
+- **One worker sits out each round.** Fifteen does not divide by seven. The one left over is
+  whichever comes last in the shuffle, so it changes from round to round.
+- **Beta shuffles the pool every time it hands out workers.** A new round of gamma work means a
+  new shuffle: no gamma agent keeps its workers from the last round, and no worker is given to two
+  gamma agents in the same round.
+- **If beta starts fewer than seven gamma agents,** each still gets two, and the rest of the pool
+  sits out.
+
+Beta deals with this. It prints one line per gamma agent with its two workers:
+
+```sh
+pool=(
+  'openrouter/deepseek/deepseek-v4.1-flash-1017#high'
+  'opencode-go/minimax-m3.1-flash#high'
+  'opencode-go/glm-5.3-flash#high'
+  'opencode-go/kimi-k3.1-pro#high'
+  'opencode-go/hy4#high'
+  'opencode/beam-free#high'
+  'opencode/deepseek-v4.1-flash-free#high'
+  'opencode/flint-40b-free#high'
+  'opencode/glm-5.3-flash-free#high'
+  'opencode/iceman-free'
+  'opencode/inkling-2-small-free#high'
+  'opencode/longcat-2.5-free'
+  'opencode/mimo-v2.6-flash-free'
+  'opencode/nemotron-3.5-lightning-free'
+  'opencode/nemotron-3.5-super-vl-free#high'
+)
+gamma=(sonnet haiku sol terra grok muse argon)
+mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
+for i in "${!gamma[@]}"; do
+  echo "${gamma[i]}: ${deal[2*i]} ${deal[2*i+1]}"
+done
+echo "sits out: ${deal[14]}"
+```
+
+Beta writes each gamma agent's two workers into that agent's brief, as the exact model strings
+above. The `#high` suffix is already there for the models that have it.
+
+### What each level's brief must say
+
+- Who the agent reports to, as a literal terminal id, and that it reports to no one else.
+- Which agents it may start, by name and model, and that it starts no others.
+- To read `hc --skill` first.
+- To kill and remove the terminals it started before it reports.
+- What it may approve when one of its children is blocked. The safe default is nothing: report it
+  upward.
+
+### Not yet tested
+
+- Only two levels have been run: an agent starting agents that start nothing. This structure has
+  three levels below alpha.
+- Only a `claude` agent has been tried as a middle agent. `codex`, `grok`, `muse` and `agy` in
+  gamma have to run `hc run`, `hc wait`, `hc read` and `hc send` themselves. Their default
+  permissions ask before shell commands, and `muse`'s sandbox has refused `hc send`, so expect
+  beta to be approving prompts for them, or to grant them the `hc` commands at launch.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
 for everything below.
