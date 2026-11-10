@@ -14,7 +14,7 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 6 | gamma | `grok` | `grok-4.7` | high |
 | 7 | gamma | `agy` | `gemini-4-argon` | high |
 | 8 | gamma | `pi` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` | high |
-| 9–24 | worker | `muse` and 15 `opencode` models | see [the pool](#dealing-the-workers) | |
+| 9–26 | worker | `muse`, 15 `opencode` models and 2 `pi` models | see [the pool](#dealing-the-workers) | |
 
 ## Chain of command
 
@@ -98,13 +98,17 @@ hc run --bg --name NAME --cwd "$PWD" -- env 'OPENCODE_CONFIG_CONTENT={"model":"M
 
 # muse: its own sandbox is the limit; do not disable it
 hc run --bg --name NAME --cwd "$PWD" -- muse --model muse-ember-1.0 --effort high "TASK"
+
+# pi: no prompts and no sandbox, so the task text is its only limit; check afterwards what it touched
+hc run --bg --name NAME --cwd "$PWD" -- pi --model MODEL --thinking high "TASK"
 ```
 
-`MODEL` for `opencode` is the id from the pool below, including `#high` where it is listed.
+`MODEL` for `opencode` is the id from the pool below, including `#high` where it is listed. For
+`pi` it is the id from the pool as written.
 
 ## Dealing the workers
 
-Beta shuffles the pool once per build. Each gamma agent gets two workers and two sit out as the
+Beta shuffles the pool once per build. Each gamma agent gets two workers and four sit out as the
 reserve. If the pair has `muse`, it is the second worker; otherwise put a paid model second.
 
 ```sh
@@ -125,6 +129,8 @@ pool=(
   'opencode opencode/mimo-v2.6-flash-free'
   'opencode opencode/nemotron-3.5-lightning-free'
   'opencode opencode/nemotron-3.5-super-vl-free#high'
+  'pi deeprelay/deeprelay/deepseek-v4.1-flash'
+  'pi deeprelay/deeprelay/glm-5.3-flash'
 )
 gamma=(sonnet haiku sol terra grok argon ultra)
 mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
