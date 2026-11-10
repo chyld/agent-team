@@ -226,6 +226,32 @@ never starts writing. It is not at a prompt and not looping on tools. Two change
   probably a path spelled differently from the two allowed forms; and `agy` prompted for
   `rm tally/MODULE_alt.py` although its allow-list and hook cover it.
 
+### Managing a grok agent
+
+`grok` launches and watches workers well, but reviews slowly and queues every message sent to it
+until its turn ends.
+
+- **It does no read-through.** Its job ends when the module and one test file pass. Beta reads its
+  module against the spec while the other agents finish. In round 9 this cut its module from over
+  nine minutes to under five.
+- **It writes no report file.** Its report is one short `hc send`, and beta writes the file. Its
+  own report file needed an approval in every round before.
+- **Send it nothing while it is working.** If beta must, it sends, reads grok's screen, and if the
+  message shows as queued while grok sits at its input, presses `hc keys NAME enter`.
+- It still asks before `rm`, `mv` and a redirect, whatever its flags: two approvals in round 9.
+- **The same treatment would suit `agy`,** which is now the slowest manager for the same reason:
+  its workers are done in two minutes and it then spends five reacting.
+
+### Wording for a race
+
+- Tell the second writer "write only `tally/MODULE_alt.py`; it is renamed later; do not write
+  `tally/MODULE.py`". Saying the file "must be importable as `tally.MODULE`" made a worker try to
+  write the other racer's file.
+- Tell every worker that the folders it writes into already exist. One sat at a prompt for
+  `mkdir -p tests`.
+- Allow three spellings of the worker's file in the `opencode` permission block: absolute,
+  relative, and relative with `./` in front.
+
 ### Watching for stalled workers
 
 A worker stuck "thinking" never changes status, so nothing wakes its parent's `hc wait`. In the
@@ -257,6 +283,32 @@ were asleep in their waits.
   upward.
 
 ### Tested: the full chain
+
+**Round 9, the same build with the grok fixes,** run on 2026-11-09. Changes: the `grok` agent
+did no read-through and wrote no report file, beta reviewed its module instead, and every agent's
+read-through got a two-minute limit; see [Managing a grok agent](#managing-a-grok-agent).
+
+| | Round 8 | Round 9 |
+|---|---|---|
+| Result | 173 tests, 24 of 24 acceptance tests | 105 tests, 24 of 24 acceptance tests |
+| Time, beta start to report | about 13 minutes | about 11 minutes |
+| `grok`'s module, launch to report | 9m20s | about 4m35s |
+| Slowest module | 9m20s, `grok` | 7m23s, `agy` |
+| Approvals by beta | 3, and 1 refusal | 2, and 1 refusal |
+
+- **`grok` is no longer the slow one.** Its module and tests were on disk 96 seconds after
+  launch, and beta's own review of the module was finished before `grok`'s report arrived. That
+  review found one real edge case, which beta fixed at integration.
+- **`codex` reviews took seconds** under the one-pass, two-minute rule, and listed their doubts
+  for beta instead of chasing them.
+- **The slow part moved to `agy`.** All four of its workers' files were on disk two minutes after
+  launch; the other five minutes were `agy` itself: a refused opening command, long pauses, one
+  real correction and a read-through that found nothing.
+- **The code race rescued one module** whose first writer was still reasoning when the second
+  delivered at 42 seconds.
+- **Workers in a race tried to write the other racer's file** three times. The one-file permission
+  blocks stopped all three. The task wording caused it; see below.
+- **Across the six builds:** 22, 23, 16, 15, 13 and 11 minutes.
 
 **Round 8, the same build with the code-writer fixes,** run on 2026-11-09. Changes: code
 writers got the "write now" line, two code writers raced on every module, and the read-through

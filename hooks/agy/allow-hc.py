@@ -11,7 +11,7 @@ Allows, as single unchained commands only:
                                                (settling a race between two workers)
   date [+FORMAT]
 It grants nothing by itself. The agent is launched with an allow-list for commands starting with
-`hc`, `python3 -m unittest`, `ls`, `date`, `rm tests/test_`, `rm tally/` and `mv tally/`; this hook answers "force_ask" for any such command that is
+`hc`, `python3 -m unittest`, `ls`, `date`, `rm` and `mv`; this hook answers "force_ask" for any such command that is
 not one of the forms above, so that it still goes to the parent for approval.
 """
 import json, os, re, shlex, sys
