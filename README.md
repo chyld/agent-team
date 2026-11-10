@@ -106,14 +106,49 @@ above. The `#high` suffix is already there for the models that have it.
 - What it may approve when one of its children is blocked. The safe default is nothing: report it
   upward.
 
-### Not yet tested
+### Tested: the full chain
 
-- Only two levels have been run: an agent starting agents that start nothing. This structure has
-  three levels below alpha.
-- Only a `claude` agent has been tried as a middle agent. `codex`, `grok`, `muse` and `agy` in
-  gamma have to run `hc run`, `hc wait`, `hc read` and `hc send` themselves. Their default
-  permissions ask before shell commands, and `muse`'s sandbox has refused `hc send`, so expect
-  beta to be approving prompts for them, or to grant them the `hc` commands at launch.
+Run once on 2026-11-09 with the question "what is 1² + 2² + ... + 14²?". Alpha briefed beta, beta
+split it across the seven gamma agents and dealt the workers, each gamma agent asked its two
+workers for one square each and added them, and beta added the sums.
+
+- **Six of seven gamma agents delivered,** all correct, and every worker answer was correct.
+- **The chain's total was 750, not 1015.** `muse` could not start its workers, so 11² + 12² never
+  came back. Beta reported the total as incomplete and named the missing part.
+- It took about six minutes for a trivial question. Nearly all of that was beta approving
+  permission prompts: 18 approvals and two refusals.
+- Alpha saw only beta. No prompt or report from gamma or the workers reached alpha.
+- Every level cleaned up its own terminals.
+
+### Known issues, by harness as a gamma agent
+
+| Harness | Can it run workers? | What happens |
+|---|---|---|
+| `claude` | yes | No prompts, done in under a minute. |
+| `grok` | yes | `--allow 'Bash(hc:*)'` covers single `hc` commands only. It asked whenever it joined two with `&&`. |
+| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command: seven approvals per agent. |
+| `agy` | yes, slowly | Asks before every command and file read: seven approvals. Refusing a command ends its turn, so it then needs an `hc send` to carry on. |
+| `muse` | **no** | Its sandbox blocks `hc run` (`cannot start core: Read-only file system`) and `hc send`. It can read `hc --skill` and nothing more. |
+
+### Rules that came out of the test
+
+- **Do not give `muse` a part that needs workers.** Until its sandbox can reach hc, it can only
+  do a part by itself, and its parent has to read its screen for the result, because it cannot
+  `hc send`. Do not disable its sandbox to get round this.
+- **A missing part means the answer is incomplete.** When a gamma agent fails, beta gives that
+  part to a gamma agent that has finished, together with the failed agent's two workers, and
+  only reports a total once every part is in. If it cannot, it reports the answer as incomplete
+  and names what is missing. It never reports a partial total as the answer.
+- **Tell `grok` to run one `hc` command per call,** never chained with `&&` or `;`.
+- **Put `hc --skill` on the list of what a parent may approve.** Every brief requires it, so a
+  parent told to approve only `hc run`, `wait`, `read`, `kill`, `rm` and `send` has to refuse it.
+- **Say what a refused agent should do next.** For `agy`, a refusal stops the turn. The parent
+  follows a refusal with `hc send NAME "skip that step and continue with your brief"`.
+- **Read every screen right after launch.** Folder-trust prompts from `muse` and `agy` were not
+  flagged as blocked. Accept trust only for the folder the work is in.
+- **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
+  their parent about seven approvals a round. To cut that, the user has to decide to grant those
+  harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
 for everything below.
@@ -212,8 +247,8 @@ asking each a math question, and reporting back: it worked, with all five answer
 - **Each level cleans up its own.** The middle agent kills and removes the terminals it started
   before it reports. You then kill and remove the middle agent.
 - **Permission prompts stop at the middle agent.** A blocked grandchild notifies its parent, not
-  you. Say in the brief what the middle agent may approve; the safe default is to approve nothing
-  and report it.
+  you: in the full-chain test beta handled 20 prompts and alpha saw none. Say in the brief exactly
+  which commands the middle agent may approve, once each, and that it reports anything else.
 
 ## Notes
 
