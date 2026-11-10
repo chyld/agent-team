@@ -66,8 +66,10 @@ as teams of their own.
   gamma agents in the same round.
 - **If beta starts fewer than six gamma agents,** each still gets two, and the rest of the pool
   sits out.
-- **The workers sitting out are the reserve.** If a worker fails, its gamma agent reports that to
-  beta, and beta hands it one from the reserve.
+- **The workers sitting out are the reserve.** When a worker fails or stalls, beta hands its gamma
+  agent one from the reserve. Beta writes the replacement's exact launch command into a file and
+  tells the gamma agent with `hc send` to kill the old worker and follow the file. A long command
+  sent in a message can be cut off; a file is not.
 
 Beta deals with this. Each pool entry is a harness and a model. It prints one line per gamma agent
 with its two workers:
@@ -113,9 +115,61 @@ handles it differently from the `opencode` workers:
   Do not disable it.
 - **Trust prompt:** in a folder it has not seen, `muse` stops at a folder-trust prompt that is not
   flagged as blocked. Read its screen right after launch and accept with `hc keys NAME enter`,
-  for the work folder only.
+  for the work folder only. This was confirmed in the build test.
 - **Result:** it cannot `hc send`. Tell it to answer in its chat and end its turn. It reports its
   own `done` status, which `hc wait --children` picks up; then read its screen.
+
+### Giving workers real work
+
+In the build test each gamma agent owned one module. One worker wrote the code and the other wrote
+the tests, both from the same section of the spec, and the gamma agent ran the tests and reviewed.
+
+- **A worker writes exactly one file.** For `opencode`, allow that file in the permission block,
+  as an absolute and a relative path, and leave everything else on `ask`:
+
+  ```sh
+  hc run --bg --name NAME --cwd "$PWD" -- env 'OPENCODE_CONFIG_CONTENT={"model":"MODEL","permission":{"edit":{"*":"ask","ABS_PATH":"allow","REL_PATH":"allow"},"bash":{"*":"ask"},"webfetch":"deny"}}' opencode --standalone --prompt "TASK"
+  ```
+
+  No worker wrote outside its file.
+- **The task says:** read the named spec section and the shared types, write the one file, run no
+  commands, start no agents, and say `DONE` in the chat. Workers do not `hc send`; the gamma agent
+  reads their screens and checks that the file exists.
+- **A worker blocked on anything but its one file is rejected,** and told with `hc send` to write
+  only its file. One model kept asking for `ls` and `find` and never wrote anything; replace a
+  worker that does this.
+- **The gamma agent does not write the files.** It runs the tests, reads both files, and sends a
+  precise correction to the worker that got it wrong. Only after two failed rounds does it edit a
+  file itself. In the build test one round was always enough and nothing was edited by hand.
+- **Have the gamma agent read the code after the tests pass.** The only real bug in a module was
+  one its tests did not catch; the gamma agent found it by reading.
+- **Give the code to any worker and the tests to a stronger one.** All six code workers produced
+  correct modules, most in under a minute, free models included. Test-writing was the weak point:
+  three of six first-choice test workers produced nothing, and two replacements wrote tests with
+  wrong expected values. Every test failure in the run was a bug in a test.
+
+  | Wrote tests well | Produced nothing as a test writer |
+  |---|---|
+  | `opencode-go/hy4`, `opencode-go/glm-5.3-flash`, `opencode/mimo-v2.6-flash-free`, `opencode/nemotron-3.5-super-vl-free` | `opencode/flint-40b-free`, `opencode/nemotron-3.5-lightning-free`, `opencode/glm-5.3-flash-free` |
+
+  This is one run, so treat it as a first reading, not a ranking.
+- **Modules that depend on each other land at the same time.** Tell each gamma agent to code
+  against the spec's signatures and to keep its tests independent of the other modules, with
+  small stand-ins. The lead writes the shared types before launching anyone.
+
+### Watching for stalled workers
+
+A worker stuck "thinking" never changes status, so nothing wakes its parent's `hc wait`. In the
+build test three workers sat silent for eight minutes and no gamma agent noticed. The rule "tell
+beta if a worker has produced nothing after five minutes" did not work, because the gamma agents
+were asleep in their waits.
+
+- **Gamma agents wait with a timeout,** `hc wait --children all --timeout 60`, and after each
+  timeout check how long each worker has been running and whether its file exists.
+- **Beta checks the workers' screens itself at about five minutes.** This is the one place a level
+  looks past the level below it. Beta only reads; it still acts through the gamma agent.
+- **`grok` queues incoming messages until its turn ends,** including hc's notices about its own
+  workers. It reacts late, so do not rely on it to catch a stall.
 
 ### What each level's brief must say
 
@@ -127,6 +181,24 @@ handles it differently from the `opencode` workers:
   upward.
 
 ### Tested: the full chain
+
+**Round 4, a real build,** run on 2026-11-09. The task was `tally`, a plain-text expense tracker
+in Python: six library modules, a command-line tool and tests, to a written spec. Beta wrote the
+shared types and the command-line tool and integrated; each gamma agent owned one module with a
+code worker and a test worker.
+
+- **It worked.** Done in about 23 minutes. The team's 238 tests passed, and so did all 24 of
+  alpha's acceptance tests, which the team had not seen, on the first run.
+- **Six of six code workers were right first time or after one correction.** No gamma agent
+  edited a worker's file by hand.
+- **Three of six test workers produced nothing** and were replaced from the reserve. See
+  [Giving workers real work](#giving-workers-real-work).
+- **Nobody noticed the stalled workers until beta read their screens.** See
+  [Watching for stalled workers](#watching-for-stalled-workers).
+- **72 approvals by beta and one refusal:** `codex` 44, `agy` 27, `grok` 4, `claude` 0.
+- **`muse`'s folder-trust prompt appeared and was handled:** its gamma agent, a `codex` agent, saw
+  it on the screen and asked beta to approve the key press.
+- Alpha saw only beta, and every level cleaned up its own terminals.
 
 **Round 3, with `muse` forced into the deal,** run on 2026-11-09 with "what is 2¹ + 2² + ... +
 2¹²?":
@@ -166,10 +238,10 @@ workers for one square each and added them, and beta added the sums.
 
 | Harness | Can it run workers? | What happens |
 |---|---|---|
-| `claude` | yes | No prompts, done in under a minute. |
-| `grok` | yes | `--allow 'Bash(hc:*)'` is unreliable. It asked for chained commands in round 1 and for two plain, long `hc run` commands in round 2. About two approvals a round. |
-| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command except `hc --skill`: seven to ten approvals per agent. |
-| `agy` | yes, slowly | Asks before every command and file read: about eight approvals. Refusing a command ends its turn, so it then needs an `hc send` to carry on. |
+| `claude` | yes | Fastest, and no prompts, because it runs in auto mode here. That also means its parent never gets to approve or refuse anything it does. |
+| `grok` | yes | `--allow 'Bash(hc:*)'` is unreliable: it asked for chained commands and for plain, long `hc run` commands. Two to four approvals a round. It queues incoming messages until its turn ends. |
+| `codex` | yes, slowly | Its sandbox cannot reach the hc core, so it asks before every `hc` command except `hc --skill`: ten for a quiz, 22 per agent in the build. The most careful reviewer, but it also invents requirements nobody asked for. |
+| `agy` | yes, slowly | Asks before every command and file read: twelve for a quiz, 27 in the build. Its first move in the build was a chained command that searched the home folder, which was refused. Refusing a command ends its turn, so it then needs an `hc send` to carry on. It can show `done` while a background wait is still running. |
 | `muse` | **no** | Its sandbox blocks `hc run` (`cannot start core: Read-only file system`) and `hc send`. It can read `hc --skill` and nothing more. |
 
 ### Rules that came out of the test
@@ -190,8 +262,16 @@ workers for one square each and added them, and beta added the sums.
 - **After each approval, read the screens of every blocked child.** `hc wait --children any` does
   not wake when a child goes from one prompt straight to the next, because its status never
   changes. In round 2 a prompt sat for a minute this way.
+- **`claude` agents have no approval layer.** They run in auto mode in this environment, so the
+  parent's approval list does not apply to them. Their brief is the only limit; write it
+  accordingly, and check afterwards what they touched.
+- **Have each level keep a progress log.** Beta appended one timestamped line per event to a file
+  (launches, approvals, refusals, reports, reassignments). Alpha could follow the whole tree from
+  that file and `hc ls` without talking to anyone but beta.
+- **Hold back acceptance tests.** Alpha wrote its own tests from the spec and did not show them to
+  the team. That is what made "done" checkable.
 - **Budget for approvals.** With default permissions, `codex` and `agy` gamma agents each cost
-  their parent ten to twelve approvals a round. To cut that, the user has to decide to grant those
+  their parent ten to twelve approvals in a quiz round and 22 to 27 in a real build. To cut that, the user has to decide to grant those
   harnesses the `hc` commands at launch; an agent must not widen permissions on its own.
 
 **Read the hc skill first:** run `hc --skill` and read it before you start anyone. It is the manual
