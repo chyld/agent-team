@@ -14,7 +14,27 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 6 | gamma | `grok` | `grok-4.7` | high |
 | 7 | gamma | `agy` | `gemini-4-argon` | high |
 | 8 | gamma | `pi` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` | high |
-| 9–26 | worker | `muse`, 15 `opencode` models and 2 `pi` models | see [the pool](#dealing-the-workers) | |
+| 9 | worker | `muse` | `muse-ember-1.0` | high |
+| 10 | worker | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
+| 11 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 12 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 13 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
+| 14 | worker | `opencode` | `opencode-go/hy4` | high |
+| 15 | worker | `opencode` | `opencode/beam-free` | high |
+| 16 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
+| 17 | worker | `opencode` | `opencode/flint-40b-free` | high |
+| 18 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
+| 19 | worker | `opencode` | `opencode/iceman-free` |  |
+| 20 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
+| 21 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
+| 22 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
+| 23 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
+| 24 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+| 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
+| 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
+
+Agents 9 to 26 are the worker pool. An `opencode` worker with no reasoning level listed runs at
+its default.
 
 ## Chain of command
 
@@ -103,35 +123,19 @@ hc run --bg --name NAME --cwd "$PWD" -- muse --model muse-ember-1.0 --effort hig
 hc run --bg --name NAME --cwd "$PWD" -- pi --model MODEL --thinking high "TASK"
 ```
 
-`MODEL` for `opencode` is the id from the pool below, including `#high` where it is listed. For
-`pi` it is the id from the pool as written.
+`MODEL` is the id from [the table at the top](#agent-team). For `opencode`, add `#high` to it when
+the table lists high reasoning.
 
 ## Dealing the workers
 
-Beta shuffles the pool once per build. Each gamma agent gets two workers and four sit out as the
-reserve. If the pair has `muse`, it is the second worker; otherwise put a paid model second.
+Beta shuffles the worker pool (agents 9 to 26 in [the table at the top](#agent-team)) once per
+build. Each gamma agent gets two workers and four sit out as the reserve. If the pair has `muse`,
+it is the second worker; otherwise put a paid model second.
 
 ```sh
-pool=(
-  'muse muse-ember-1.0'
-  'opencode openrouter/deepseek/deepseek-v4.1-flash-1017#high'
-  'opencode opencode-go/minimax-m3.1-flash#high'
-  'opencode opencode-go/glm-5.3-flash#high'
-  'opencode opencode-go/kimi-k3.1-pro#high'
-  'opencode opencode-go/hy4#high'
-  'opencode opencode/beam-free#high'
-  'opencode opencode/deepseek-v4.1-flash-free#high'
-  'opencode opencode/flint-40b-free#high'
-  'opencode opencode/glm-5.3-flash-free#high'
-  'opencode opencode/iceman-free'
-  'opencode opencode/inkling-2-small-free#high'
-  'opencode opencode/longcat-2.5-free'
-  'opencode opencode/mimo-v2.6-flash-free'
-  'opencode opencode/nemotron-3.5-lightning-free'
-  'opencode opencode/nemotron-3.5-super-vl-free#high'
-  'pi deeprelay/deeprelay/deepseek-v4.1-flash'
-  'pi deeprelay/deeprelay/glm-5.3-flash'
-)
+# the worker rows of the table at the top of this README, as "harness model"
+mapfile -t pool < <(awk -F' *[|] *' '{ gsub(/`/, "") } $3 == "worker" {
+  print $4, $5 ($4 == "opencode" && $6 == "high" ? "#high" : "") }' /path/to/agent-team/README.md)
 gamma=(sonnet haiku sol terra grok argon ultra)
 mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
 for i in "${!gamma[@]}"; do
