@@ -3,35 +3,35 @@
 A team of AI agents run through `hc`, three levels deep. **Read the hc skill first:** run
 `hc --skill` before you start anyone.
 
-| # | Level | Harness | Model | Reasoning |
-|---|---|---|---|---|
-| 0 | alpha | `claude` | `claude-fable-5-2` | high |
-| 1 | beta | `claude` | `claude-opus-5-5` | high |
-| 2 | gamma | `claude` | `claude-sonnet-5-5` | high |
-| 3 | gamma | `claude` | `claude-haiku-5-5` | high |
-| 4 | gamma | `codex` | `gpt-6.1-sol` | high |
-| 5 | gamma | `codex` | `gpt-6.1-terra` | high |
-| 6 | gamma | `grok` | `grok-4.7` | high |
-| 7 | gamma | `agy` | `gemini-4-argon` | high |
-| 8 | worker | `muse` | `muse-ember-1.0` | high |
-| 9 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 10 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 11 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
-| 12 | worker | `opencode` | `opencode-go/hy4` | high |
-| 13 | worker | `opencode` | `opencode/beam-free` | high |
-| 14 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
-| 15 | worker | `opencode` | `opencode/flint-40b-free` | high |
-| 16 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
-| 17 | worker | `opencode` | `opencode/iceman-free` |  |
-| 18 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
-| 19 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
-| 20 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
-| 21 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
-| 22 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
-| 23 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high |
-| 24 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  |
-| 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
-| 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
+| # | Level | Harness | Model | Reasoning | Free? |
+|---|---|---|---|---|---|
+| 0 | alpha | `claude` | `claude-fable-5-2` | high | no |
+| 1 | beta | `claude` | `claude-opus-5-5` | high | no |
+| 2 | gamma | `claude` | `claude-sonnet-5-5` | high | no |
+| 3 | gamma | `claude` | `claude-haiku-5-5` | high | no |
+| 4 | gamma | `codex` | `gpt-6.1-sol` | high | no |
+| 5 | gamma | `codex` | `gpt-6.1-terra` | high | no |
+| 6 | gamma | `grok` | `grok-4.7` | high | no |
+| 7 | gamma | `agy` | `gemini-4-argon` | high | no |
+| 8 | worker | `muse` | `muse-ember-1.0` | high | no |
+| 9 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
+| 10 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
+| 11 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
+| 12 | worker | `opencode` | `opencode-go/hy4` | high | no |
+| 13 | worker | `opencode` | `opencode/beam-free` | high | yes |
+| 14 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | yes |
+| 15 | worker | `opencode` | `opencode/flint-40b-free` | high | yes |
+| 16 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high | yes |
+| 17 | worker | `opencode` | `opencode/iceman-free` |  | yes |
+| 18 | worker | `opencode` | `opencode/inkling-2-small-free` | high | yes |
+| 19 | worker | `opencode` | `opencode/longcat-2.5-free` |  | yes |
+| 20 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  | yes |
+| 21 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | yes |
+| 22 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | yes |
+| 23 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high | yes |
+| 24 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | yes |
+| 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
+| 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
 Agents 8 to 26 are the worker pool. An `opencode` worker with no reasoning level listed runs at
 its default.
