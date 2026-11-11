@@ -38,6 +38,11 @@ its default.
 
 ## Chain of command
 
+**The user decides the hierarchy.** Before a build, alpha asks the user which agents take part,
+at which level, and who reports to whom, and starts no one until the user has answered. The levels
+in the table above and the chain below are the arrangement used so far, not a fixed rule. No agent
+changes the hierarchy on its own.
+
 ```
 alpha ── beta ── six gamma agents ── workers (dealt at random from the pool)
 ```
@@ -53,6 +58,7 @@ alpha ── beta ── six gamma agents ── workers (dealt at random from t
 
 ## How to run a build
 
+0. **The user** decides the hierarchy for this build (see [Chain of command](#chain-of-command)).
 1. **Alpha** writes `SPEC.md` and `brief-beta.md` in a new folder, writes acceptance tests
    elsewhere, and starts beta with `Read brief-beta.md and follow it exactly.`
 2. **Beta** writes the shared types first, then [deals the workers](#dealing-the-workers), writes
