@@ -31,17 +31,10 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 23 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
 | 24 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high |
 | 25 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  |
-| 26 | worker | `pi` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
-| 27 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
-| 28 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
-| 29 | worker | `pi` | `openrouter/cohere/north-mini-code:free` | high |
-| 30 | worker | `pi` | `openrouter/google/gemma-4-26b-a4b-it:free` | high |
-| 31 | worker | `pi` | `openrouter/google/gemma-4-31b-it:free` | high |
-| 32 | worker | `pi` | `openrouter/liquid/lfm-2.5-2.6b:free` | high |
-| 33 | worker | `pi` | `openrouter/liquid/lfm-3-1.7b:free` | high |
-| 34 | worker | `pi` | `openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` | high |
+| 26 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
+| 27 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
 
-Agents 9 to 34 are the worker pool. An `opencode` worker with no reasoning level listed runs at
+Agents 9 to 27 are the worker pool. An `opencode` worker with no reasoning level listed runs at
 its default.
 
 ## Chain of command
@@ -136,8 +129,8 @@ the table lists high reasoning.
 
 ## Dealing the workers
 
-Beta shuffles the worker pool (agents 9 to 34 in [the table at the top](#agent-team)) once per
-build. Each gamma agent gets two workers and the other twelve sit out as the reserve. If the pair has `muse`,
+Beta shuffles the worker pool (agents 9 to 27 in [the table at the top](#agent-team)) once per
+build. Each gamma agent gets two workers and the other five sit out as the reserve. If the pair has `muse`,
 it is the second worker; otherwise put a paid model second.
 
 ```sh
