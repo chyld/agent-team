@@ -18,18 +18,18 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 10 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
 | 11 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
 | 12 | worker | `opencode` | `opencode-go/hy4` | high | no |
-| 13 | worker | `opencode` | `opencode/beam-free` | high | yes |
-| 14 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | yes |
-| 15 | worker | `opencode` | `opencode/flint-40b-free` | high | yes |
-| 16 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high | yes |
-| 17 | worker | `opencode` | `opencode/iceman-free` |  | yes |
-| 18 | worker | `opencode` | `opencode/inkling-2-small-free` | high | yes |
-| 19 | worker | `opencode` | `opencode/longcat-2.5-free` |  | yes |
-| 20 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  | yes |
-| 21 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | yes |
-| 22 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | yes |
-| 23 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high | yes |
-| 24 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | yes |
+| 13 | worker | `opencode` | `opencode/beam-free` | high | 🟢 yes |
+| 14 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
+| 15 | worker | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
+| 16 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high | 🟢 yes |
+| 17 | worker | `opencode` | `opencode/iceman-free` |  | 🟢 yes |
+| 18 | worker | `opencode` | `opencode/inkling-2-small-free` | high | 🟢 yes |
+| 19 | worker | `opencode` | `opencode/longcat-2.5-free` |  | 🟢 yes |
+| 20 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  | 🟢 yes |
+| 21 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | 🟢 yes |
+| 22 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
+| 23 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
+| 24 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
 | 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
 | 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
