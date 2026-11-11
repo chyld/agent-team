@@ -15,21 +15,21 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 7 | gamma | `agy` | `gemini-4-argon` | high |
 | 8 | gamma | `pi` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` | high |
 | 9 | worker | `muse` | `muse-ember-1.0` | high |
-| 10 | worker | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
-| 11 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 12 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 13 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
-| 14 | worker | `opencode` | `opencode-go/hy4` | high |
-| 15 | worker | `opencode` | `opencode/beam-free` | high |
-| 16 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
-| 17 | worker | `opencode` | `opencode/flint-40b-free` | high |
-| 18 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
-| 19 | worker | `opencode` | `opencode/iceman-free` |  |
-| 20 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
-| 21 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
-| 22 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
-| 23 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
-| 24 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+| 10 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 11 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 12 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
+| 13 | worker | `opencode` | `opencode-go/hy4` | high |
+| 14 | worker | `opencode` | `opencode/beam-free` | high |
+| 15 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
+| 16 | worker | `opencode` | `opencode/flint-40b-free` | high |
+| 17 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
+| 18 | worker | `opencode` | `opencode/iceman-free` |  |
+| 19 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
+| 20 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
+| 21 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
+| 22 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
+| 23 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+| 24 | worker | `pi` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high |
 | 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
 | 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
 
