@@ -13,34 +13,33 @@ A team of AI agents run through `hc`, three levels deep. **Read the hc skill fir
 | 5 | gamma | `codex` | `gpt-6.1-terra` | high |
 | 6 | gamma | `grok` | `grok-4.7` | high |
 | 7 | gamma | `agy` | `gemini-4-argon` | high |
-| 8 | gamma | `pi` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` | high |
-| 9 | worker | `muse` | `muse-ember-1.0` | high |
-| 10 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 11 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 12 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
-| 13 | worker | `opencode` | `opencode-go/hy4` | high |
-| 14 | worker | `opencode` | `opencode/beam-free` | high |
-| 15 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
-| 16 | worker | `opencode` | `opencode/flint-40b-free` | high |
-| 17 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
-| 18 | worker | `opencode` | `opencode/iceman-free` |  |
-| 19 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
-| 20 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
-| 21 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
-| 22 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
-| 23 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
-| 24 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high |
-| 25 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  |
-| 26 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
-| 27 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
+| 8 | worker | `muse` | `muse-ember-1.0` | high |
+| 9 | worker | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 10 | worker | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 11 | worker | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
+| 12 | worker | `opencode` | `opencode-go/hy4` | high |
+| 13 | worker | `opencode` | `opencode/beam-free` | high |
+| 14 | worker | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
+| 15 | worker | `opencode` | `opencode/flint-40b-free` | high |
+| 16 | worker | `opencode` | `opencode/glm-5.3-flash-free` | high |
+| 17 | worker | `opencode` | `opencode/iceman-free` |  |
+| 18 | worker | `opencode` | `opencode/inkling-2-small-free` | high |
+| 19 | worker | `opencode` | `opencode/longcat-2.5-free` |  |
+| 20 | worker | `opencode` | `opencode/mimo-v2.6-flash-free` |  |
+| 21 | worker | `opencode` | `opencode/nemotron-3.5-lightning-free` |  |
+| 22 | worker | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high |
+| 23 | worker | `opencode` | `opencode/minimax-m3.1-flash-free` | high |
+| 24 | worker | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  |
+| 25 | worker | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high |
+| 26 | worker | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high |
 
-Agents 9 to 27 are the worker pool. An `opencode` worker with no reasoning level listed runs at
+Agents 8 to 26 are the worker pool. An `opencode` worker with no reasoning level listed runs at
 its default.
 
 ## Chain of command
 
 ```
-alpha ── beta ── seven gamma agents ── workers (dealt at random from the pool)
+alpha ── beta ── six gamma agents ── workers (dealt at random from the pool)
 ```
 
 - **Alpha** takes the task from the user, writes the spec and beta's brief, and checks the result
@@ -57,7 +56,7 @@ alpha ── beta ── seven gamma agents ── workers (dealt at random from
 1. **Alpha** writes `SPEC.md` and `brief-beta.md` in a new folder, writes acceptance tests
    elsewhere, and starts beta with `Read brief-beta.md and follow it exactly.`
 2. **Beta** writes the shared types first, then [deals the workers](#dealing-the-workers), writes
-   one brief file per gamma agent (`.team/brief-g-NAME.md`) and launches all seven.
+   one brief file per gamma agent (`.team/brief-g-NAME.md`) and launches all six.
 3. **Each gamma agent starts four workers at once**, two racing on the code and two on the tests:
 
    | Worker | Writes | Model |
@@ -96,7 +95,6 @@ hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
 | `codex` | `codex --no-daemon -m MODEL -c model_reasoning_effort='"high"' -s workspace-write -a on-request -c 'sandbox_workspace_write.network_access=true' "PROMPT"` |
 | `grok` | `grok -m MODEL --effort high --permission-mode acceptEdits --allow 'Bash(hc:*)' --allow 'Bash(python3 -m unittest:*)' "PROMPT"` |
 | `agy` | `agy --model MODEL --effort high --mode accept-edits --settings '{"permissions":{"allow":["command(hc)","command(python3 -m unittest)","command(ls)","command(date)","command(rm)","command(mv)"]}}' -i "PROMPT"` |
-| `pi` | `pi --model MODEL --thinking high "PROMPT"` |
 
 The `codex` and `agy` flags grant them their routine `hc` commands so that beta is not asked to
 approve each one. That grant is the user's decision; agents never widen permissions on their own.
@@ -107,9 +105,6 @@ approve each one. That grant is the user's decision; agents never widen permissi
   `.agents/allow-hc.py`. The hook narrows the allow-list to single, unchained commands on the
   agent's own workers (`w-GAMMA-N`); anything else still prompts. Set the agent's short name in
   `hooks.json`, and have beta write its own terminal id into `.team/parent-id`.
-- **`pi`:** it has no approval prompts and no sandbox, so none of its commands prompt. Say what
-  it may touch in its brief and check afterwards what it touched. `MODEL` is the full id from
-  the table above, with the provider in front.
 
 Workers:
 
@@ -129,20 +124,20 @@ the table lists high reasoning.
 
 ## Dealing the workers
 
-Beta shuffles the worker pool (agents 9 to 27 in [the table at the top](#agent-team)) once per
-build. Each gamma agent gets two workers and the other five sit out as the reserve. If the pair has `muse`,
-it is the second worker; otherwise put a paid model second.
+Beta shuffles the worker pool (agents 8 to 26 in [the table at the top](#agent-team)) once per
+build. Each gamma agent gets two workers and the other seven sit out as the reserve. If the pair has
+`muse`, it is the second worker; otherwise put a paid model second.
 
 ```sh
 # the worker rows of the table at the top of this README, as "harness model"
 mapfile -t pool < <(awk -F' *[|] *' '{ gsub(/`/, "") } $3 == "worker" {
   print $4, $5 ($4 == "opencode" && $6 == "high" ? "#high" : "") }' /path/to/agent-team/README.md)
-gamma=(sonnet haiku sol terra grok argon ultra)
+gamma=(sonnet haiku sol terra grok argon)
 mapfile -t deal < <(printf '%s\n' "${pool[@]}" | shuf)
 for i in "${!gamma[@]}"; do
   echo "${gamma[i]}: [${deal[2*i]}] [${deal[2*i+1]}]"
 done
-printf 'sits out: [%s]\n' "${deal[@]:14}"
+printf 'sits out: [%s]\n' "${deal[@]:12}"
 ```
 
 A stall is when neither racing file exists after three minutes (four for tests). Beta then hands
@@ -195,7 +190,7 @@ For the `_alt` racers, name the `_alt` file and add "it is renamed later; do not
 | `codex` | Careful reviewer that invents requirements unless held to the one-pass, quote-the-spec rule. Trust prompt: `enter`. |
 | `grok` | Queues every message until its turn ends, and reviews slowly. Give it no review and no report file; its report is one `hc send`. Still asks before `rm`, `mv` and redirects. |
 | `agy` | Opens with a chained command that searches the home folder; refuse it and send "continue". Slow to react. Trust prompt: `enter`. |
-| `pi` | Gamma agent or worker. Never asks and has no sandbox, so its brief or task is its only limit: check afterwards what it touched. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. So far it has only led one worker in a trial, not a build, and has not yet run as a worker. |
+| `pi` | Worker only. Never asks and has no sandbox, so its task is its only limit: check afterwards what it touched. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. It has not yet run as a worker in a build. |
 | `muse` | Worker only: its sandbox blocks `hc run` and `hc send`. Trust prompt: `enter`. It answers in its chat and ends its turn. |
 | `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. |
 
