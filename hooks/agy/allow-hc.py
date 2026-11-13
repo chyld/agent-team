@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Antigravity PreToolUse hook: keep a beta agent's allow-list narrow.
 
-Usage in hooks.json: ./allow-hc.py BETA   (BETA is the short name, e.g. argon)
+Usage in hooks.json: ./allow-hc.py BETA   (BETA is the short name, e.g. hydrogen)
 Allows, as single unchained commands only:
   hc --skill | hc ls | hc wait ...            hc read/keys/kill/rm on its own omegas (w-BETA-N)
   hc send to its own omegas or to its parent (id in .team/parent-id)

@@ -1,1 +1,1 @@
-{"allow-hc": {"PreToolUse": [{"matcher": "run_command", "hooks": [{"command": "./allow-hc.py argon", "timeout": 10}]}]}}
+{"allow-hc": {"PreToolUse": [{"matcher": "run_command", "hooks": [{"command": "./allow-hc.py hydrogen", "timeout": 10}]}]}}
