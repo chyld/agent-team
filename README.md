@@ -14,26 +14,27 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 7 | beta | `grok` | `grok-4.7` | high | no |
 | 8 | beta | `agy` | `gemini-4-hydrogen` | high | no |
 | 9 | beta | `muse` | `muse-ember-1.0` | high | no |
-| 10 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
-| 11 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
-| 12 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
-| 13 | omega | `opencode` | `opencode-go/hy4` | high | no |
-| 14 | omega | `opencode` | `opencode/beam-free` | high | 🟢 yes |
-| 15 | omega | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
-| 16 | omega | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
-| 17 | omega | `opencode` | `opencode/glm-5.3-flash-free` | high | 🟢 yes |
-| 18 | omega | `opencode` | `opencode/iceman-free` |  | 🟢 yes |
-| 19 | omega | `opencode` | `opencode/inkling-2-small-free` | high | 🟢 yes |
-| 20 | omega | `opencode` | `opencode/longcat-2.5-free` |  | 🟢 yes |
-| 21 | omega | `opencode` | `opencode/mimo-v2.6-flash-free` |  | 🟢 yes |
-| 22 | omega | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | 🟢 yes |
-| 23 | omega | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
-| 24 | omega | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
-| 25 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
-| 26 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
-| 27 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
+| 10 | beta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high | no |
+| 11 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
+| 12 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
+| 13 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
+| 14 | omega | `opencode` | `opencode-go/hy4` | high | no |
+| 15 | omega | `opencode` | `opencode/beam-free` | high | 🟢 yes |
+| 16 | omega | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
+| 17 | omega | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
+| 18 | omega | `opencode` | `opencode/glm-5.3-flash-free` | high | 🟢 yes |
+| 19 | omega | `opencode` | `opencode/iceman-free` |  | 🟢 yes |
+| 20 | omega | `opencode` | `opencode/inkling-2-small-free` | high | 🟢 yes |
+| 21 | omega | `opencode` | `opencode/longcat-2.5-free` |  | 🟢 yes |
+| 22 | omega | `opencode` | `opencode/mimo-v2.6-flash-free` |  | 🟢 yes |
+| 23 | omega | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | 🟢 yes |
+| 24 | omega | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
+| 25 | omega | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
+| 26 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
+| 27 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
+| 28 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
-Agent 0 is alpha, agents 1 to 9 are beta, and agents 10 to 27 are the omega pool.
+Agent 0 is alpha, agents 1 to 10 are beta, and agents 11 to 28 are the omega pool.
 A blank reasoning cell means the model's default.
 
 ## Hierarchy
@@ -70,6 +71,7 @@ hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
 | `grok` | `grok -m MODEL --effort high --permission-mode acceptEdits --allow 'Bash(hc:*)' --allow 'Bash(python3 -m unittest:*)' "PROMPT"` |
 | `agy` | `agy --model MODEL --effort high --mode accept-edits --settings '{"permissions":{"allow":["command(hc)","command(python3 -m unittest)","command(ls)","command(date)","command(rm)","command(mv)"]}}' -i "PROMPT"` |
 | `muse` | `muse --model MODEL --effort high "PROMPT"` (its own sandbox is the limit; do not disable it) |
+| `opencode` | `env 'OPENCODE_CONFIG_CONTENT={"model":"MODEL#high","permission":{"edit":"allow","bash":{"*":"ask"},"webfetch":"deny"}}' opencode --standalone --prompt "PROMPT"` (may edit files, asks alpha for every command) |
 
 These flags grant `codex` and `agy` their routine `hc` commands. That grant is the user's
 decision; agents never widen permissions on their own. `codex` then prompts for nothing, so say
@@ -117,7 +119,7 @@ never "always allow" and never `--force`.
 | `agy` | Opens with a chained command that searches the home folder; refuse it and send "continue". Slow to react. Trust prompt: `enter`. |
 | `pi` | Omega only. Never asks and has no sandbox, so its task is its only limit: check afterwards what it touched. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. It has not yet run as an omega in a build. |
 | `muse` | Its sandbox blocks `hc run` and `hc send`, so as a beta agent it can neither start omegas nor send its report: alpha reads its screen. Trust prompt: `enter`. It answers in its chat and ends its turn. It has not yet run as a beta agent in a build. |
-| `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. |
+| `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. It has not yet run as a beta agent in a build. |
 
 - **Read every screen right after launch,** and again after each approval. Trust prompts are not
   reported as blocked, and a child that goes from one prompt straight to the next wakes no one.
