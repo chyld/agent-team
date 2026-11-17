@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Antigravity PreToolUse hook: keep a beta agent's allow-list narrow.
+"""Antigravity PreToolUse hook: keep a gamma agent's allow-list narrow.
 
-Usage in hooks.json: ./allow-hc.py BETA   (BETA is the short name, e.g. hydrogen)
+Usage in hooks.json: ./allow-hc.py GAMMA   (GAMMA is the short name, e.g. hydrogen)
 Allows, as single unchained commands only:
-  hc --skill | hc ls | hc wait ...            hc read/keys/kill/rm on its own omegas (w-BETA-N)
+  hc --skill | hc ls | hc wait ...            hc read/keys/kill/rm on its own omegas (w-GAMMA-N)
   hc send to its own omegas or to its parent (id in .team/parent-id)
-  hc run that starts an omega named w-BETA-N running opencode or muse, with no bypass flags
+  hc run that starts an omega named w-GAMMA-N running opencode or muse, with no bypass flags
   python3 -m unittest ...                      ls of relative paths inside the folder
   rm tests/test_MODULE_alt.py | rm tally/MODULE_alt.py | mv tally/MODULE_alt.py tally/MODULE.py
                                                (settling a race between two omegas)
@@ -19,7 +19,7 @@ import json, os, re, shlex, sys
 def out(decision, reason=""):
     print(json.dumps({"decision": decision, "reason": reason})); sys.exit(0)
 
-beta = sys.argv[1] if len(sys.argv) > 1 else ""
+gamma = sys.argv[1] if len(sys.argv) > 1 else ""
 try:
     cmd = json.load(sys.stdin)["toolCall"]["args"]["CommandLine"]
 except Exception:
@@ -38,7 +38,7 @@ except ValueError:
     out("force_ask")
 if not toks or any(t and set(t) <= set("();<>|&") for t in toks):
     out("force_ask")   # an unquoted shell operator: chained, piped or redirected
-omega = re.compile(r"^w-%s-\d+$" % re.escape(beta))
+omega = re.compile(r"^w-%s-\d+$" % re.escape(gamma))
 ok = False
 if toks[0] == "hc" and len(toks) > 1:
     sub, rest = toks[1], toks[2:]
