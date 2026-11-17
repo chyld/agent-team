@@ -36,10 +36,8 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 29 | omega | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
 | 30 | omega | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
 | 31 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
-| 32 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
-| 33 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
-Agent 0 is alpha, agent 1 is beta, agents 2 to 10 are gamma, agents 11 to 15 are vercel, and agents 16 to 33 are the omega pool.
+Agent 0 is alpha, agent 1 is beta, agents 2 to 10 are gamma, agents 11 to 15 are vercel, and agents 16 to 31 are the omega pool.
 A blank reasoning cell means the model's default.
 
 ## Hierarchy
