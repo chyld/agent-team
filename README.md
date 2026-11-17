@@ -10,37 +10,36 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 3 | beta | `claude` | `claude-haiku-5-5` | high | no |
 | 4 | beta | `codex` | `gpt-6.2-sol` | high | no |
 | 5 | beta | `codex` | `gpt-6.2-astra` | high | no |
-| 6 | beta | `codex` | `gpt-6-astra` | high | no |
-| 7 | beta | `grok` | `grok-4.7` | high | no |
-| 8 | beta | `agy` | `gemini-4-hydrogen` | high | no |
-| 9 | beta | `muse` | `muse-ember-1.0` | high | no |
-| 10 | beta | `muse` | `muse-wonder-1.0` | high | no |
-| 11 | beta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high | no |
-| 12 | beta | `opencode` | `vercel/zai/glm-5.3` | high | no |
-| 13 | beta | `opencode` | `vercel/zai/glm-5.3-flash` | high | no |
-| 14 | beta | `opencode` | `vercel/moonshotai/kimi-k3` | high | no |
-| 15 | beta | `opencode` | `vercel/moonshotai/kimi-k3.1-pro` | high | no |
-| 16 | beta | `opencode` | `vercel/deepseek/deepseek-v4.1-flash` | high | no |
-| 17 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
-| 18 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
-| 19 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
-| 20 | omega | `opencode` | `opencode-go/hy4` | high | no |
-| 21 | omega | `opencode` | `opencode/beam-free` | high | 🟢 yes |
-| 22 | omega | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
-| 23 | omega | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
-| 24 | omega | `opencode` | `opencode/glm-5.3-flash-free` | high | 🟢 yes |
-| 25 | omega | `opencode` | `opencode/iceman-free` |  | 🟢 yes |
-| 26 | omega | `opencode` | `opencode/inkling-2-small-free` | high | 🟢 yes |
-| 27 | omega | `opencode` | `opencode/longcat-2.5-free` |  | 🟢 yes |
-| 28 | omega | `opencode` | `opencode/mimo-v2.6-flash-free` |  | 🟢 yes |
-| 29 | omega | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | 🟢 yes |
-| 30 | omega | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
-| 31 | omega | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
-| 32 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
-| 33 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
-| 34 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
+| 6 | beta | `grok` | `grok-4.7` | high | no |
+| 7 | beta | `agy` | `gemini-4-hydrogen` | high | no |
+| 8 | beta | `muse` | `muse-ember-1.0` | high | no |
+| 9 | beta | `muse` | `muse-wonder-1.0` | high | no |
+| 10 | beta | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high | no |
+| 11 | beta | `opencode` | `vercel/zai/glm-5.3` | high | no |
+| 12 | beta | `opencode` | `vercel/zai/glm-5.3-flash` | high | no |
+| 13 | beta | `opencode` | `vercel/moonshotai/kimi-k3` | high | no |
+| 14 | beta | `opencode` | `vercel/moonshotai/kimi-k3.1-pro` | high | no |
+| 15 | beta | `opencode` | `vercel/deepseek/deepseek-v4.1-flash` | high | no |
+| 16 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
+| 17 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
+| 18 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
+| 19 | omega | `opencode` | `opencode-go/hy4` | high | no |
+| 20 | omega | `opencode` | `opencode/beam-free` | high | 🟢 yes |
+| 21 | omega | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
+| 22 | omega | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
+| 23 | omega | `opencode` | `opencode/glm-5.3-flash-free` | high | 🟢 yes |
+| 24 | omega | `opencode` | `opencode/iceman-free` |  | 🟢 yes |
+| 25 | omega | `opencode` | `opencode/inkling-2-small-free` | high | 🟢 yes |
+| 26 | omega | `opencode` | `opencode/longcat-2.5-free` |  | 🟢 yes |
+| 27 | omega | `opencode` | `opencode/mimo-v2.6-flash-free` |  | 🟢 yes |
+| 28 | omega | `opencode` | `opencode/nemotron-3.5-lightning-free` |  | 🟢 yes |
+| 29 | omega | `opencode` | `opencode/nemotron-3.5-super-vl-free` | high | 🟢 yes |
+| 30 | omega | `opencode` | `opencode/minimax-m3.1-flash-free` | high | 🟢 yes |
+| 31 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
+| 32 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
+| 33 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
-Agent 0 is alpha, agents 1 to 16 are beta, and agents 17 to 34 are the omega pool.
+Agent 0 is alpha, agents 1 to 15 are beta, and agents 16 to 33 are the omega pool.
 A blank reasoning cell means the model's default.
 
 ## Hierarchy
