@@ -8,8 +8,8 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 1 | beta | `claude` | `claude-opus-5-5` | high | no |
 | 2 | beta | `claude` | `claude-sonnet-5-5` | high | no |
 | 3 | beta | `claude` | `claude-haiku-5-5` | high | no |
-| 4 | beta | `codex` | `gpt-6.1-sol` | high | no |
-| 5 | beta | `codex` | `gpt-6.1-terra` | high | no |
+| 4 | beta | `codex` | `gpt-6.2-sol` | high | no |
+| 5 | beta | `codex` | `gpt-6.2-astra` | high | no |
 | 6 | beta | `codex` | `gpt-6-astra` | high | no |
 | 7 | beta | `grok` | `grok-4.7` | high | no |
 | 8 | beta | `agy` | `gemini-4-hydrogen` | high | no |
