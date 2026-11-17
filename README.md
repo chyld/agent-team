@@ -24,7 +24,7 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 17 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
 | 18 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
 | 19 | omega | `opencode` | `opencode-go/hy4` | high | no |
-| 20 | omega | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
+| 20 | free | `opencode` | `openrouter/baidu/ernie-5.5-flash-preview:free` |  | 🟢 yes |
 | 21 | free | `opencode` | `opencode/beam-free` | high | 🟢 yes |
 | 22 | free | `opencode` | `opencode/deepseek-v4.1-flash-free` | high | 🟢 yes |
 | 23 | free | `opencode` | `opencode/flint-40b-free` | high | 🟢 yes |
@@ -41,7 +41,7 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 34 | free | `opencode` | `opencode-go/iceman-contributor-free` |  | 🟢 yes |
 | 35 | free | `opencode` | `opencode-go/longcat-2.5-free` |  | 🟢 yes |
 
-Agent 0 is alpha, agent 1 is beta, agents 2 to 10 are gamma, agents 11 to 15 are vercel, agents 16 to 20 are the omega pool, and agents 21 to 35 are free.
+Agent 0 is alpha, agent 1 is beta, agents 2 to 10 are gamma, agents 11 to 15 are vercel, agents 16 to 19 are the omega pool, and agents 20 to 35 are free.
 A blank reasoning cell means the model's default.
 
 ## Hierarchy
