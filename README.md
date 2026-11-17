@@ -15,11 +15,11 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 8 | gamma | `muse` | `muse-ember-1.0` | high | no |
 | 9 | gamma | `muse` | `muse-wonder-1.0` | high | no |
 | 10 | gamma | `opencode` | `openrouter/deepseek/deepseek-v4.1-flash-1017` | high | no |
-| 11 | gamma | `opencode` | `vercel/zai/glm-5.3` | high | no |
-| 12 | gamma | `opencode` | `vercel/zai/glm-5.3-flash` | high | no |
-| 13 | gamma | `opencode` | `vercel/moonshotai/kimi-k3` | high | no |
-| 14 | gamma | `opencode` | `vercel/moonshotai/kimi-k3.1-pro` | high | no |
-| 15 | gamma | `opencode` | `vercel/deepseek/deepseek-v4.1-flash` | high | no |
+| 11 | vercel | `opencode` | `vercel/zai/glm-5.3` | high | no |
+| 12 | vercel | `opencode` | `vercel/zai/glm-5.3-flash` | high | no |
+| 13 | vercel | `opencode` | `vercel/moonshotai/kimi-k3` | high | no |
+| 14 | vercel | `opencode` | `vercel/moonshotai/kimi-k3.1-pro` | high | no |
+| 15 | vercel | `opencode` | `vercel/deepseek/deepseek-v4.1-flash` | high | no |
 | 16 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high | no |
 | 17 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high | no |
 | 18 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high | no |
@@ -39,7 +39,7 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 32 | omega | `pi` | `deeprelay/deeprelay/deepseek-v4.1-flash` | high | no |
 | 33 | omega | `pi` | `deeprelay/deeprelay/glm-5.3-flash` | high | no |
 
-Agent 0 is alpha, agent 1 is beta, agents 2 to 15 are gamma, and agents 16 to 33 are the omega pool.
+Agent 0 is alpha, agent 1 is beta, agents 2 to 10 are gamma, agents 11 to 15 are vercel, and agents 16 to 33 are the omega pool.
 A blank reasoning cell means the model's default.
 
 ## Hierarchy
