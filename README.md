@@ -61,8 +61,8 @@ missing part means the result is incomplete: reassign it or report it as missing
 
 ## Launch commands
 
-Every agent is one command, run interactively (never `claude -p`, `codex exec`, `pi -p`,
-`opencode run` and the like):
+Every agent is one command, run interactively (never `claude -p`, `codex exec`, `opencode run` and
+the like):
 
 ```sh
 hc run --bg --name NAME --cwd DIR -- HARNESS_COMMAND
@@ -83,15 +83,12 @@ decision; agents never widen permissions on their own. `codex` then prompts for 
 folder as `.agents/`, with its short name set in `hooks.json` and beta's terminal id in
 `.team/parent-id`.
 
-Omegas (`MODEL` is the id from the table; for `opencode`, add `#high` when the table lists high
-reasoning):
+Omegas all run through `opencode` (`MODEL` is the id from the table, with `#high` added when the
+table lists high reasoning):
 
 ```sh
 # opencode: may write one file, asks for everything else
 hc run --bg --name NAME --cwd "$PWD" -- env 'OPENCODE_CONFIG_CONTENT={"model":"MODEL","permission":{"edit":{"*":"ask","ABS_PATH":"allow","REL_PATH":"allow","./REL_PATH":"allow"},"bash":{"*":"ask"},"webfetch":"deny"}}' opencode --standalone --prompt "TASK"
-
-# pi: no prompts and no sandbox, so the task text is its only limit; check afterwards what it touched
-hc run --bg --name NAME --cwd "$PWD" -- pi --model MODEL --thinking high "TASK"
 ```
 
 ## Briefs and tasks
@@ -121,7 +118,6 @@ never "always allow" and never `--force`.
 | `codex` | Careful reviewer that invents requirements unless held to the one-pass, quote-the-spec rule. Trust prompt: `enter`. |
 | `grok` | Queues every message until its turn ends, and reviews slowly. Give it no review and no report file; its report is one `hc send`. Still asks before `rm`, `mv` and redirects. |
 | `agy` | Opens with a chained command that searches the home folder; refuse it and send "continue". Slow to react. Trust prompt: `enter`. |
-| `pi` | Omega only. Never asks and has no sandbox, so its task is its only limit: check afterwards what it touched. No trust prompt in a new folder. It shows `idle` before its first turn, so a wait sent right after launch returns at once: wait again. It has not yet run as an omega in a build. |
 | `muse` | Its sandbox blocks `hc run` and `hc send`, so as a gamma agent it can neither start omegas nor send its report: beta reads its screen. Trust prompt: `enter`. It answers in its chat and ends its turn. It has not yet run as a gamma agent in a build. |
 | `opencode` | Status is unreliable in both directions; read the screen and check the file. With no permission block it asks for nothing. It has not yet run as a gamma agent in a build. |
 
