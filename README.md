@@ -20,3 +20,8 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 13 | opencode | `opencode` | `opencode-go/glm-5.3-flash` | high |
 | 14 | opencode | `opencode` | `opencode-go/qwen4-max` | high |
 | 15 | opencode | `opencode` | `opencode-go/deepseek-v4.1-flash` | high |
+
+| 16 | free | `opencode` | `opencode-go/beam-free` | high |
+| 17 | free | `opencode` | `opencode-go/hy4-flash-free` | high |
+| 18 | free | `opencode` | `opencode-go/iceman-contributor-free` |  |
+| 19 | free | `opencode` | `opencode-go/longcat-2.5-free` |  |
