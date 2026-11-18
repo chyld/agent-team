@@ -15,10 +15,10 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 8 | gamma | `muse` | `muse-ember-1.0` | high |
 | 9 | gamma | `muse` | `muse-wonder-1.0` | high |
 | 10 | gamma | `copilot` | `mai-code-2` | high |
-| 11 | omega | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 12 | omega | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 13 | omega | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
-| 14 | omega | `opencode` | `opencode-go/hy4` | high |
+| 11 | opencode | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 12 | opencode | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 13 | opencode | `opencode` | `opencode-go/kimi-k3.1-pro` | high |
+| 14 | opencode | `opencode` | `opencode-go/hy4` | high |
 | 15 | free | `opencode` | `opencode/beam-free` | high |
 | 16 | free | `opencode` | `opencode/deepseek-v4.1-flash-free` | high |
 | 17 | free | `opencode` | `opencode/flint-40b-free` | high |
