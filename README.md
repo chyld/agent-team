@@ -38,3 +38,4 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 31 | free | `opencode` | `opencode-go/hy4-flash-free` | high |
 | 32 | free | `opencode` | `opencode-go/iceman-contributor-free` |  |
 | 33 | free | `opencode` | `opencode-go/longcat-2.5-free` |  |
+| 34 | gamma | `copilot` | `mai-code-2` | high |
