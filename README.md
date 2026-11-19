@@ -12,15 +12,16 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 5 | gamma | `codex` | `gpt-6.2-astra` | high |
 | 6 | gamma | `grok` | `grok-4.7` | high |
 | 7 | gamma | `agy` | `gemini-4-hydrogen` | high |
-| 8 | gamma | `muse` | `muse-ember-1.0` | high |
-| 9 | gamma | `muse` | `muse-wonder-1.0` | high |
-| 10 | gamma | `copilot` | `mai-code-2` | high |
-| 11 | gamma | `copilot` | `mai-code-2-flash` | high |
-| 12 | opencode | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
-| 13 | opencode | `opencode` | `opencode-go/glm-5.3-flash` | high |
-| 14 | opencode | `opencode` | `opencode-go/qwen4-max` | high |
-| 15 | opencode | `opencode` | `opencode-go/deepseek-v4.1-flash` | high |
-| 16 | free | `opencode` | `opencode-go/beam-free` | high |
-| 17 | free | `opencode` | `opencode-go/hy4-flash-free` | high |
-| 18 | free | `opencode` | `opencode-go/iceman-contributor-free` |  |
-| 19 | free | `opencode` | `opencode-go/longcat-2.5-free` |  |
+| 8 | gamma | `agy` | `gemini-4-neon` | high |
+| 9 | gamma | `muse` | `muse-ember-1.0` | high |
+| 10 | gamma | `muse` | `muse-wonder-1.0` | high |
+| 11 | gamma | `copilot` | `mai-code-2` | high |
+| 12 | gamma | `copilot` | `mai-code-2-flash` | high |
+| 13 | opencode | `opencode` | `opencode-go/minimax-m3.1-flash` | high |
+| 14 | opencode | `opencode` | `opencode-go/glm-5.3-flash` | high |
+| 15 | opencode | `opencode` | `opencode-go/qwen4-max` | high |
+| 16 | opencode | `opencode` | `opencode-go/deepseek-v4.1-flash` | high |
+| 17 | free | `opencode` | `opencode-go/beam-free` | high |
+| 18 | free | `opencode` | `opencode-go/hy4-flash-free` | high |
+| 19 | free | `opencode` | `opencode-go/iceman-contributor-free` |  |
+| 20 | free | `opencode` | `opencode-go/longcat-2.5-free` |  |
