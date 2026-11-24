@@ -5,14 +5,14 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | # | Level | Harness | Model | Reasoning |
 |---|---|---|---|---|
 | 0 | alpha | `claude` | `claude-fable-5-2` | high |
-| 1 | beta | `claude` | `claude-opus-5-5` | high |
-| 2 | gamma | `claude` | `claude-sonnet-5-5` | high |
-| 3 | gamma | `claude` | `claude-haiku-5-5` | high |
-| 4 | gamma | `codex` | `gpt-6.2-sol` | high |
-| 5 | gamma | `codex` | `gpt-6.2-astra` | high |
-| 6 | gamma | `grok` | `grok-4.7` | high |
-| 7 | gamma | `agy` | `gemini-4-hydrogen` | high |
-| 8 | gamma | `agy` | `gemini-4-neon` | high |
+| 1 | alpha | `claude` | `claude-opus-5-5` | high |
+| 2 | alpha | `agy` | `gemini-4-neon` | high |
+| 3 | gamma | `claude` | `claude-sonnet-5-5` | high |
+| 4 | gamma | `claude` | `claude-haiku-5-5` | high |
+| 5 | gamma | `codex` | `gpt-6.2-sol` | high |
+| 6 | gamma | `codex` | `gpt-6.2-astra` | high |
+| 7 | gamma | `grok` | `grok-4.7` | high |
+| 8 | gamma | `agy` | `gemini-4-hydrogen` | high |
 | 9 | gamma | `muse` | `muse-ember-1.0` | high |
 | 10 | gamma | `muse` | `muse-wonder-1.0` | high |
 | 11 | gamma | `copilot` | `mai-code-2` | high |
