@@ -24,4 +24,4 @@ A team of AI agents run through `hc`. Run `hc --skill` before you start anyone.
 | 17 | free | `opencode` | `opencode-go/beam-free` | high |
 | 18 | free | `opencode` | `opencode-go/hy4-flash-free` | high |
 | 19 | free | `opencode` | `opencode-go/iceman-contributor-free` |  |
-| 20 | free | `opencode` | `opencode-go/longcat-2.5-free` |  |
+| 20 | free | `opencode` | `opencode-go/hungerg-free` |  |
